@@ -629,7 +629,7 @@ namespace MFW.WF
         {
             if(cbxVideoInput.SelectedIndex<0)
             {
-                LAL.Answer()
+               // LAL.Answer()
             }
             else
             {
@@ -646,7 +646,7 @@ namespace MFW.WF
         }
         private void Hangup(int callHandle)
         {
-            lalProperties.SetProperty(PropertyEnum.VIDEO_INPUT_DEVICE, cbxVideoInput.SelectedValue.ToString())
+           // lalProperties.SetProperty(PropertyEnum.VIDEO_INPUT_DEVICE, cbxVideoInput.SelectedValue.ToString())
         }
         #endregion
     }
