@@ -49,6 +49,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="CallWindow.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="CallWindow.Designer.cs">
+      <DependentUpon>CallWindow.cs</DependentUpon>
+    </Compile>
     <Compile Include="LoginWindow.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -63,12 +69,21 @@
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="TestWindow.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="TestWindow.Designer.cs">
+      <DependentUpon>TestWindow.cs</DependentUpon>
+    </Compile>
     <Compile Include="UX\ChannelView.cs">
       <SubType>UserControl</SubType>
     </Compile>
     <Compile Include="UX\ChannelView.Designer.cs">
       <DependentUpon>ChannelView.cs</DependentUpon>
     </Compile>
+    <EmbeddedResource Include="CallWindow.resx">
+      <DependentUpon>CallWindow.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="LoginWindow.resx">
       <DependentUpon>LoginWindow.cs</DependentUpon>
     </EmbeddedResource>
@@ -84,6 +99,9 @@
       <AutoGen>True</AutoGen>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
+    <EmbeddedResource Include="TestWindow.resx">
+      <DependentUpon>TestWindow.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="UX\ChannelView.resx">
       <DependentUpon>ChannelView.cs</DependentUpon>
     </EmbeddedResource>

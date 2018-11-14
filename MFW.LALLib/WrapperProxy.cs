@@ -114,7 +114,7 @@ namespace MFW.LALLib
             return (ErrorNumberEnum)WrapperInterface.setSpeakerVolume((uint)volume);
         }
         
-        public static int getSpeakerVolume()
+        public static int GetSpeakerVolume()
         {
             return (int)WrapperInterface.getSpeakerVolume();
         }

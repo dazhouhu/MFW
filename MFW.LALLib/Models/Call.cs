@@ -104,7 +104,7 @@ namespace MFW.LALLib
             }
         }
         #endregion    
-        #region
+        #region IsContentSupported
         private bool _isContentSupported = false;
         public bool IsContentSupported
         {
@@ -115,40 +115,26 @@ namespace MFW.LALLib
             }
         }
         #endregion
+
         #region Channels
         private ObservableCollection<Channel> _channels = new ObservableCollection<Channel>();
-        public ObservableCollection<Channel> Channels
-        {
-            get { return _channels; }
-        }
+        public ObservableCollection<Channel> Channels { get { return _channels; } }
 
         public Channel GetChannel(int channelID)
         {
-            return _channels.Where(c => c.ChannelID == channelID).FirstOrDefault();
+            return _channels.FirstOrDefault(c=>c.ChannelID==channelID);
         }
         public void AddChannel(int channelID)
         {
-            var c = GetChannel(channelID);
-            if (null == c)
+            if(null == GetChannel(channelID))
             {
-                var channel = new Channel(channelID, false);
+                var isActive = channelID == ActiveSpeakerId;
+                var channel = new Channel(this,channelID, false, isActive);
                 _channels.Add(channel);
-                if(channelID==ActiveSpeakerId)
+                if (isActive)
                 {
                     CurrentChannel = channel;
                 }
-            }
-        }
-        public void AddChannel(Channel channel)
-        {
-            var c = GetChannel(channel.ChannelID);
-            if (null == c)
-            {
-                _channels.Add(channel);
-            }
-            else
-            {
-                c.ChannelName = channel.ChannelName;
             }
         }
         public void RemoveChannel(int channelID)
@@ -157,49 +143,53 @@ namespace MFW.LALLib
             if(null != channel)
             {
                 _channels.Remove(channel);
+                if(CurrentChannel== channel)
+                {
+                    CurrentChannel = _channels.LastOrDefault();
+                }
             }
         }
-        public void ClearChannels()
+        public void ClearRemoteChannels()
         {
-            _channels.Clear();
+            var channels = _channels.Where(c => !c.IsLocal).ToList();
+            foreach (var c in channels)
+            {
+                _channels.Remove(c);
+            }
+            CurrentChannel = channels.FirstOrDefault();
         }
-
-        public void SetChannelName (int channelID,string channelName)
+        public void SetChannelName(int channelID,string channelName)
         {
             var channel = GetChannel(channelID);
-            if(null != channel)
+            if (null != channel)
             {
                 channel.ChannelName = channelName;
             }
         }
-
-        public Channel GetRemoteChanel()
+        public void SetChannelSize(int channelID, int width,int height)
         {
-            return _channels.FirstOrDefault(c =>!c.IsLocal);
+            var channel = GetChannel(channelID);
+            if (null != channel)
+            {
+                channel.Size = new System.Tuple<int, int>(width, height);
+            }
         }
+
         #endregion
         #region CurrentChannel
-        public Channel CurrentChannel
-        {
-            get { return _channels.FirstOrDefault(f => f.IsActive); }
+        public Channel _currentChannel;
+        public Channel CurrentChannel {
+            get { return _currentChannel; }
             set
             {
-                var currentChannel = _channels.FirstOrDefault(f => f.IsActive);
-                Channel channel = null;
-                if (null != value)
+
+                if (_currentChannel !=value)
                 {
-                    channel = GetChannel(value.ChannelID);
-                }
-                if (currentChannel != channel)
-                {
-                    if (null != currentChannel)
+                    if (null != _currentChannel)
                     {
-                        currentChannel.IsActive = false;
+                        _currentChannel.IsActive = false;
                     }
-                    if (null != channel)
-                    {
-                        channel.IsActive = true;
-                    }
+                    _currentChannel = value;
                     NotifyPropertyChanged("CurrentChannel");
                 }
             }
@@ -218,10 +208,16 @@ namespace MFW.LALLib
         #region ActiveSpeakerId
         private int _activeSpeakerId = 0;
         public int ActiveSpeakerId {
-            get { return null==CurrentChannel?0:CurrentChannel.ChannelID; }
-            set{
-                var channel = GetChannel(value);
-                CurrentChannel = channel;
+            get { return _activeSpeakerId; }
+            set{               
+                _activeSpeakerId = value;
+                var channel = GetChannel(_activeSpeakerId);
+                if(null != channel)
+                {
+                    channel.IsActive = true;
+                    CurrentChannel = channel;
+                    NotifyPropertyChanged("ActiveSpeakerId");
+                }
             }
         }
         #endregion

@@ -97,10 +97,16 @@ namespace MFW.LALLib
                         }
                         if (null != Dispatcher)
                         {
-                            Dispatcher.Invoke(new Action(() =>
+                            try
                             {
-                                DoEvent(evt);
-                            }));
+                                Dispatcher.Invoke(new Action(() =>
+                                {
+                                    DoEvent(evt);
+                                }));
+                            }catch(Exception ex)
+                            {
+                                log.Error(ex.Message);
+                            }
                         }
                         WrapperProxy.FreeEvent(evt.EventHandle);
                     }
@@ -353,6 +359,7 @@ namespace MFW.LALLib
                     break;  /* from MP */
                 case EventTypeEnum.STREAM_VIDEO_LOCAL_RESOLUTIONCHANGED:
                     log.Info("debug: STREAM_VIDEO_LOCAL_RESOLUTIONCHANGED: WIDTH:" + evt.WndWidth + "   HEIGHT:" + evt.WndHeight);
+                    evt.Call.SetChannelSize(0, evt.WndWidth, evt.WndHeight);
                     evt.Call.LocalWidth = evt.WndWidth;
                     evt.Call.LocalHeight = evt.WndHeight;
                     evt.Call.CallEventState = CallEventStateEnum.LOCAL_RESOLUTION_CHANGED;
@@ -361,6 +368,7 @@ namespace MFW.LALLib
                     log.Info("debug: STREAM_VIDEO_REMOTE_RESOLUTIONCHANGED: WIDTH:" + evt.WndWidth + "   HEIGHT:" + evt.WndHeight);
                     evt.Call.RemoteWidth = evt.WndWidth;
                     evt.Call.RemoteHeight = evt.WndHeight;
+                    evt.Call.SetChannelSize(evt.StreamId, evt.WndWidth, evt.WndHeight);
                     evt.Call.CallEventState = CallEventStateEnum.REMOTE_RESOLUTION_CHANGED;
                     break;
                 case EventTypeEnum.SIP_CONTENT_INCOMING:
@@ -398,6 +406,7 @@ namespace MFW.LALLib
                     else
                     {
                         evt.Call.IsAudioOnly = true;
+                        evt.Call.IsContentSupported = false;
                         evt.Call.CallEventState = CallEventStateEnum.CALL_AUDIO_ONLY_TRUE;
                     }
                     break;
@@ -427,8 +436,8 @@ namespace MFW.LALLib
                         log.Info("[svc debug] REMOTE_VIDEO_REFRESH");
                         log.Info("[svc debug] chanNumber:" + evt.RemoteVideoChannelNum);
                         log.Info("[svc debug] activeSpeaker_id:" + evt.ActiveSpeakerStreamId);
-                        evt.Call.ClearChannels();
                         evt.Call.DisplayCallName = evt.CallerName + "(id" + callManager.GetCallCounter() + ")";
+                        
                         evt.Call.ChannelNumber = evt.RemoteVideoChannelNum;
                         evt.Call.ActiveSpeakerId = evt.ActiveSpeakerStreamId;
                         evt.Call.CallEventState = CallEventStateEnum.REFRESH_LAYOUT;

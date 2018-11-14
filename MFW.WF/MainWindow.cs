@@ -21,6 +21,8 @@ namespace MFW.WF
         private EventMonitor eventMonitor = EventMonitor.GetInstance();
         private DeviceManager deviceManager = DeviceManager.GetInstance();
         private LALProperties lalProperties = LALProperties.GetInstance();
+
+        private IDictionary<int, CallWindow> callWindows = new Dictionary<int,CallWindow>();
         #endregion
         public MainWindow()
         {
@@ -28,7 +30,7 @@ namespace MFW.WF
         }
         #region CallBacks
         private void callsChangedHandle(object send, NotifyCollectionChangedEventArgs args)
-        {/*
+        {
             switch (args.Action)
             {
                 case NotifyCollectionChangedAction.Add:
@@ -38,7 +40,7 @@ namespace MFW.WF
                             var call = item as Call;
                             if (null != call)
                             {
-                                    var callWindow = new CallWindow() { Call = call };
+                                    var callWindow = new CallWindow(call);
                                     call.CallStateListener = callWindow;
                                     callWindows.Add(call.CallHandle, callWindow);
                                     callWindow.Closed += onCallWindowClosedHandle;
@@ -74,14 +76,34 @@ namespace MFW.WF
                 case NotifyCollectionChangedAction.Move: break;
                 case NotifyCollectionChangedAction.Replace: break;
             }
-            */
             gvCalls.DataSource = null;
             gvCalls.DataSource = callManager.CallList;
         }
 
+        private void OnCallManagerPropertyChangedHandle(object sender, PropertyChangedEventArgs args)
+        {
+            switch (args.PropertyName)
+            {
+                case "CurrentCall":  //当前通道变化
+                    {
+                        if(null != callManager.CurrentCall)
+                        {
+                            if(callWindows.ContainsKey(callManager.CurrentCall.CallHandle))
+                            {
+                                var callWindow = callWindows[callManager.CurrentCall.CallHandle];
+                                if(null != callWindow)
+                                {
+                                    callWindow.Show();
+                                }
+                            }
+                        }
+                    }
+                    break;
+            }
+
+        }
         private void onCallWindowClosedHandle(object sender, EventArgs args)
         {
-            /*
             var callWindow = sender as CallWindow;
             if (null != callWindow)
             {
@@ -97,7 +119,6 @@ namespace MFW.WF
                     callWindows.Remove(wnd.Key);
                 }
             }
-            */
         }
         private void deviceChangedHandle(object sender, NotifyCollectionChangedEventArgs args)
         {
@@ -169,43 +190,12 @@ namespace MFW.WF
         private void MainWindow_Load(object sender, EventArgs e)
         {
             callManager.CallsChanged += callsChangedHandle;
+            callManager.PropertyChanged += OnCallManagerPropertyChangedHandle;
             eventMonitor.MonitorEvent += monitorEventHandle;
             eventMonitor.Dispatcher = this;
             deviceManager.DevicesChanged += deviceChangedHandle;
             LAL.GetDevices();
             gvCalls.AutoGenerateColumns = false;
-
-          callManager.AddCall(
-              new Call(1) { DisplayCallName = "00001", CallState = CallStateEnum.SIP_UNKNOWN, IsAudioOnly = true }
-          );
-          callManager.AddCall(
-              new Call(2) { DisplayCallName = "00002", CallState = CallStateEnum.SIP_INCOMING_INVITE,IsContentSupported=true }
-          );
-          callManager.AddCall(
-              new Call(3) { DisplayCallName = "00003", CallState = CallStateEnum.SIP_INCOMING_CONNECTED, IsMute = true }
-          );
-            callManager.AddCall(
-                new Call(41) { DisplayCallName = "000041", CallState = CallStateEnum.SIP_CALL_HOLD, IsAudioOnly = true, IsContentSupported = true, IsMute = true }
-            );
-            callManager.AddCall(
-              new Call(4) { DisplayCallName = "00004", CallState = CallStateEnum.SIP_CALL_HELD,IsAudioOnly=true,IsContentSupported=true,IsMute=true }
-          );
-          callManager.AddCall(
-              new Call(5) { DisplayCallName = "00005", CallState = CallStateEnum.SIP_CALL_DOUBLE_HOLD }
-          );
-          callManager.AddCall(
-              new Call(6) { DisplayCallName = "00006", CallState = CallStateEnum.SIP_OUTGOING_RINGING }
-          );
-          callManager.AddCall(
-              new Call(7) { DisplayCallName = "00007", CallState = CallStateEnum.SIP_OUTGOING_CONNECTED }
-          );
-          callManager.AddCall(
-              new Call(8) { DisplayCallName = "00008", CallState = CallStateEnum.SIP_CALL_CLOSED }
-          );
-          callManager.AddCall(
-              new Call(9) { DisplayCallName = "00009", CallState = CallStateEnum.NULL_CALL }
-          );
-
         }
 
         #region Devices
