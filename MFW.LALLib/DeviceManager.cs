@@ -54,9 +54,9 @@ namespace MFW.LALLib
                         var audioOutput = GetDevicesByType(DeviceTypeEnum.AUDIO_OUTPUT).FirstOrDefault();
                         var inputHandle = audioInput?.DeviceHandle;
                         var outputHandle = audioOutput?.DeviceHandle;
-                        if (null == CurrentVideoInputDevice && null != audioInput)
+                        if (null == CurrentAudioInputDevice && null != audioInput)
                         {
-                            CurrentVideoInputDevice = audioInput;
+                            CurrentAudioInputDevice = audioInput;
                             WrapperProxy.SetAudioDevice(inputHandle, outputHandle);
                             WrapperProxy.SetAudioDeviceForRingtone(outputHandle);
                         }
@@ -101,9 +101,9 @@ namespace MFW.LALLib
                                     var audioOutput = GetDevicesByType(DeviceTypeEnum.AUDIO_OUTPUT).FirstOrDefault();
                                     var inputHandle = audioInput?.DeviceHandle;
                                     var outputHandle = audioOutput?.DeviceHandle;
-                                    if (null == CurrentVideoInputDevice && null != audioInput)
+                                    if (null == CurrentAudioInputDevice && null != audioInput)
                                     {
-                                        CurrentVideoInputDevice = audioInput;
+                                        CurrentAudioInputDevice = audioInput;
                                         WrapperProxy.SetAudioDevice(inputHandle, outputHandle);
                                         WrapperProxy.SetAudioDeviceForRingtone(outputHandle);
                                     }
@@ -123,9 +123,9 @@ namespace MFW.LALLib
                                     var audioOutput = GetDevicesByType(DeviceTypeEnum.AUDIO_OUTPUT).FirstOrDefault();
                                     var inputHandle = audioInput?.DeviceHandle;
                                     var outputHandle = audioOutput?.DeviceHandle;
-                                    if (null == CurrentVideoInputDevice && null != audioInput)
+                                    if (null == CurrentAudioInputDevice && null != audioInput)
                                     {
-                                        CurrentVideoInputDevice = audioInput;
+                                        CurrentAudioInputDevice = audioInput;
                                         WrapperProxy.SetAudioDevice(inputHandle, outputHandle);
                                         WrapperProxy.SetAudioDeviceForRingtone(outputHandle);
                                     }

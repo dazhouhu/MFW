@@ -439,7 +439,7 @@ namespace MFW.LALLib
                         evt.Call.DisplayCallName = evt.CallerName + "(id" + callManager.GetCallCounter() + ")";
                         
                         evt.Call.ChannelNumber = evt.RemoteVideoChannelNum;
-                        evt.Call.ActiveSpeakerId = evt.ActiveSpeakerStreamId;
+                       // evt.Call.ActiveSpeakerId = evt.ActiveSpeakerStreamId;
                         evt.Call.CallEventState = CallEventStateEnum.REFRESH_LAYOUT;
                     }
                     break;
@@ -447,6 +447,9 @@ namespace MFW.LALLib
                     {
                         log.Info("[LAL event] SVC_CHANNEL_STATUS_UPDATE" + " StreamId=" + evt.StreamId + " callHandle=" + evt.CallHandle);
                         evt.Call.AddChannel(evt.StreamId);
+                        if(evt.IsActiveSpeaker){
+                            evt.Call.ActiveSpeakerId=evt.StreamId;
+                        }
                         evt.Call.CallEventState = CallEventStateEnum.CHANNEL_STATUS_UPDATE;
                     }
                     break;

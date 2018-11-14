@@ -137,6 +137,18 @@ namespace MFW.LALLib
                 }
             }
         }
+        public void AddChannel(Channel channel)
+        {
+            if (null == GetChannel(channel.ChannelID))
+            {
+                var isActive = channel.IsActive;
+                _channels.Add(channel);
+                if (isActive)
+                {
+                    CurrentChannel = channel;
+                }
+            }
+        }
         public void RemoveChannel(int channelID)
         {
             var channel = GetChannel(channelID);

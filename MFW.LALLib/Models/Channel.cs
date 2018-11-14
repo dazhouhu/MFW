@@ -52,8 +52,11 @@ namespace MFW.LALLib
         {
             get { return _channelName; }
             set {
-                _channelName = value;
-                NotifyPropertyChanged("ChannelName");
+                if (_channelName != value)
+                {
+                    _channelName = value;
+                    NotifyPropertyChanged("ChannelName");
+                }
             }
         }
         #endregion
@@ -64,8 +67,11 @@ namespace MFW.LALLib
         {
             get { return _isActive; }
             set {
-                _isActive = value;
-                NotifyPropertyChanged("IsActive");
+                if (_isActive != value)
+                {
+                    _isActive = value;
+                    NotifyPropertyChanged("IsActive");
+                }
             }
         }
         #endregion
@@ -76,8 +82,10 @@ namespace MFW.LALLib
         {
             get { return _isVideo; }
             set {
-                _isVideo = value;
-                NotifyPropertyChanged("IsVideo");
+                if(_isVideo != value){
+                    _isVideo = value;
+                    NotifyPropertyChanged("IsVideo");
+                }
             }
         }
         #endregion
@@ -116,6 +124,7 @@ namespace MFW.LALLib
                 if (_size != value)
                 {
                     _size = value;
+                    IsVideo = true;
                     NotifyPropertyChanged("Size");
                 }
             }

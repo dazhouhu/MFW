@@ -31,6 +31,7 @@ namespace MFW.WF
                 throw new Exception("呼叫不存在");
             }
             _call = call;
+            this.Text = _call.DisplayCallName;
             _call.PropertyChanged += OnCallPropertyChangedHandle;
             _call.Channels.CollectionChanged += OnChannelsCllectionChangedHandle;
         }
@@ -49,26 +50,25 @@ namespace MFW.WF
                     break;
                 case "IsAudioOnly": //语音视频变化
                     {
-                        if (_call.IsAudioOnly)
+                        if (null == deviceManager.CurrentVideoInputDevice)
                         {
-                            btnCamera.Image = Properties.Resources.camera_mute;
                             btnCamera.Enabled = false;
+                            btnCamera.Image = Properties.Resources.camera_mute;
                             this.btnShare.Enabled = false;
                             this.btnShare.Image = Properties.Resources.share_mute;
                         }
                         else
                         {
-                            if (null == deviceManager.CurrentVideoInputDevice)
+                            btnCamera.Enabled = true;
+                            if (_call.IsAudioOnly)
                             {
                                 btnCamera.Image = Properties.Resources.camera_mute;
-                                btnCamera.Enabled = false;
                                 this.btnShare.Enabled = false;
                                 this.btnShare.Image = Properties.Resources.share_mute;
                             }
                             else
                             {
                                 btnCamera.Image = Properties.Resources.camera;
-                                btnCamera.Enabled = true;
                                 if (_call.IsContentSupported)
                                 {
                                     this.btnShare.Enabled = true;
@@ -152,8 +152,8 @@ namespace MFW.WF
         {
             var viewWidth = pnlView.Width;
             var viewHeight = pnlView.Height;
-            var cellWidth = 200 * viewWidth / 800;
-            var cellHeigth = 230 * viewHeight / 600;
+            var cellWidth = 320 * viewWidth / 800;
+            var cellHeigth = 280 * viewHeight / 600;
             var i = 1;
             foreach(var channelViewKV in channelViews)
             {
@@ -161,15 +161,19 @@ namespace MFW.WF
                 if(channelViewKV.Key== _call.ActiveSpeakerId)
                 {
                     view.Location = new Point(0,0);
-                    view.Size = new Size(viewWidth - cellWidth, viewHeight);
+                    view.Size = new Size(viewWidth, viewHeight);
+                    view.Anchor = AnchorStyles.Left | AnchorStyles.Top | AnchorStyles.Right | AnchorStyles.Bottom;
                     view.SendToBack();
                 }
                 else
                 {
-                    view.Location = new Point(viewWidth - cellWidth, viewHeight - cellHeigth * (i + 1));
+                    view.Location = new Point(viewWidth - cellWidth, viewHeight - cellHeigth * i);
                     view.Size = new Size(cellWidth, cellHeigth);
+                    view.Anchor = AnchorStyles.Right | AnchorStyles.Bottom;
                     view.BringToFront();
+                    i++;
                 }
+                view.PaintView();
             }            
         }
         #endregion
@@ -243,13 +247,15 @@ namespace MFW.WF
                 this.btnShare.Image = Properties.Resources.share_mute;
             }
             #endregion
+
+            this._call.AddChannel(new Channel(this._call, 0, true, false));
         }
         private void btnMic_Click(object sender, EventArgs e)
         {
             tbMicVolume.Show();
             tbMicVolume.Focus();
             tbMicVolume.BringToFront();
-            tbMicVolume.Left = btnMic.Left + 20;
+            tbMicVolume.Left = btnMic.Left + 10;
             tbMicVolume.Top = this.Height-pnlToolBars.Height-158;
         }
 
@@ -258,7 +264,7 @@ namespace MFW.WF
             tbSpeakerVolume.Show();
             tbSpeakerVolume.Focus();
             tbSpeakerVolume.BringToFront();
-            tbSpeakerVolume.Left = btnSpeaker.Left + 20;
+            tbSpeakerVolume.Left = btnSpeaker.Left + 10;
             tbSpeakerVolume.Top = this.Height - pnlToolBars.Height - 158;
         }
 
@@ -440,10 +446,12 @@ namespace MFW.WF
                         deviceManager.StopSound();
                         deviceManager.PlaySound(DeviceManager.RingingSound, true, 2000);
 
+                        /*
                         if (MessageBox.Show(this, "当前正呼叫中，确认要挂断吗？", "确认框", MessageBoxButtons.OKCancel, MessageBoxIcon.Error) == DialogResult.OK)
                         {
                             LAL.Hangup(this._call);
                         }
+                        */
                     }
                     break;
                 case CallEventStateEnum.OUTGOING_FAILURE:               /* from CC */
@@ -494,6 +502,7 @@ namespace MFW.WF
                     break;
                 case CallEventStateEnum.SIP_CALL_TRYING:
                     {
+                        /*
                         deviceManager.StopSound();
                         deviceManager.PlaySound(DeviceManager.RingingSound, true, 2000);
 
@@ -503,6 +512,7 @@ namespace MFW.WF
                         {
                             LAL.Hangup(this._call);
                         }
+                        */
                     }
                     break;
             }
