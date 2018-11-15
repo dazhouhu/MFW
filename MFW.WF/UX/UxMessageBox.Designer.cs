@@ -44,7 +44,7 @@
             this.lblMsg.Name = "lblMsg";
             this.lblMsg.Size = new System.Drawing.Size(62, 16);
             this.lblMsg.TabIndex = 2;
-            this.lblMsg.Text = "label1";
+            this.lblMsg.Text = "";
             // 
             // msgIcon
             // 
@@ -65,7 +65,7 @@
             this.btnCancel.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.btnCancel.Location = new System.Drawing.Point(122, 141);
             this.btnCancel.Name = "btnCancel";
-            this.btnCancel.Size = new System.Drawing.Size(95, 40);
+            this.btnCancel.Size = new System.Drawing.Size(90, 40);
             this.btnCancel.TabIndex = 0;
             this.btnCancel.Text = "取消  ";
             this.btnCancel.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
@@ -83,7 +83,7 @@
             this.btnOK.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.btnOK.Location = new System.Drawing.Point(12, 141);
             this.btnOK.Name = "btnOK";
-            this.btnOK.Size = new System.Drawing.Size(95, 40);
+            this.btnOK.Size = new System.Drawing.Size(90, 40);
             this.btnOK.TabIndex = 0;
             this.btnOK.Text = "确定  ";
             this.btnOK.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
@@ -101,12 +101,13 @@
             this.btnNo.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.btnNo.Location = new System.Drawing.Point(223, 141);
             this.btnNo.Name = "btnNo";
-            this.btnNo.Size = new System.Drawing.Size(95, 40);
+            this.btnNo.Size = new System.Drawing.Size(90, 40);
             this.btnNo.TabIndex = 0;
             this.btnNo.Text = "否  ";
             this.btnNo.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             this.btnNo.UseVisualStyleBackColor = false;
             this.btnNo.Visible = false;
+            this.btnNo.Click += new System.EventHandler(this.btnNo_Click);
             // 
             // UxMessageBox
             // 

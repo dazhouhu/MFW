@@ -32,11 +32,12 @@
             this.button1 = new System.Windows.Forms.Button();
             this.trackBar1 = new System.Windows.Forms.TrackBar();
             this.contextMenuStrip1 = new System.Windows.Forms.ContextMenuStrip(this.components);
-            this.contextMenuStrip2 = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.fdsafdToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.fdsafToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.dasfdsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.contextMenuStrip2 = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.panel1 = new System.Windows.Forms.Panel();
+            this.msgPnl = new MFW.WF.UX.UXMessageMask();
             ((System.ComponentModel.ISupportInitialize)(this.trackBar1)).BeginInit();
             this.contextMenuStrip1.SuspendLayout();
             this.panel1.SuspendLayout();
@@ -71,28 +72,28 @@
             this.contextMenuStrip1.Name = "contextMenuStrip1";
             this.contextMenuStrip1.Size = new System.Drawing.Size(116, 70);
             // 
-            // contextMenuStrip2
-            // 
-            this.contextMenuStrip2.Name = "contextMenuStrip2";
-            this.contextMenuStrip2.Size = new System.Drawing.Size(61, 4);
-            // 
             // fdsafdToolStripMenuItem
             // 
             this.fdsafdToolStripMenuItem.Name = "fdsafdToolStripMenuItem";
-            this.fdsafdToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.fdsafdToolStripMenuItem.Size = new System.Drawing.Size(115, 22);
             this.fdsafdToolStripMenuItem.Text = "fdsafd";
             // 
             // fdsafToolStripMenuItem
             // 
             this.fdsafToolStripMenuItem.Name = "fdsafToolStripMenuItem";
-            this.fdsafToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.fdsafToolStripMenuItem.Size = new System.Drawing.Size(115, 22);
             this.fdsafToolStripMenuItem.Text = "fdsaf";
             // 
             // dasfdsToolStripMenuItem
             // 
             this.dasfdsToolStripMenuItem.Name = "dasfdsToolStripMenuItem";
-            this.dasfdsToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.dasfdsToolStripMenuItem.Size = new System.Drawing.Size(115, 22);
             this.dasfdsToolStripMenuItem.Text = "dasfds";
+            // 
+            // contextMenuStrip2
+            // 
+            this.contextMenuStrip2.Name = "contextMenuStrip2";
+            this.contextMenuStrip2.Size = new System.Drawing.Size(61, 4);
             // 
             // panel1
             // 
@@ -102,11 +103,22 @@
             this.panel1.Size = new System.Drawing.Size(200, 120);
             this.panel1.TabIndex = 4;
             // 
+            // msgPnl
+            // 
+            this.msgPnl.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(65)))), ((int)(((byte)(255)))), ((int)(((byte)(255)))), ((int)(((byte)(255)))));
+            this.msgPnl.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.msgPnl.Location = new System.Drawing.Point(0, 0);
+            this.msgPnl.Name = "msgPnl";
+            this.msgPnl.Size = new System.Drawing.Size(284, 262);
+            this.msgPnl.TabIndex = 5;
+            this.msgPnl.Visible = false;
+            // 
             // TestWindow
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(284, 262);
+            this.Controls.Add(this.msgPnl);
             this.Controls.Add(this.panel1);
             this.Controls.Add(this.button1);
             this.Name = "TestWindow";
@@ -129,5 +141,6 @@
         private System.Windows.Forms.ToolStripMenuItem fdsafToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem dasfdsToolStripMenuItem;
         private System.Windows.Forms.Panel panel1;
+        private UX.UXMessageMask msgPnl;
     }
 }

@@ -88,6 +88,12 @@
     <Compile Include="UX\UxMessageBox.Designer.cs">
       <DependentUpon>UxMessageBox.cs</DependentUpon>
     </Compile>
+    <Compile Include="UX\UXMessageMask.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="UX\UXMessageMask.Designer.cs">
+      <DependentUpon>UXMessageMask.cs</DependentUpon>
+    </Compile>
     <EmbeddedResource Include="CallWindow.resx">
       <DependentUpon>CallWindow.cs</DependentUpon>
     </EmbeddedResource>

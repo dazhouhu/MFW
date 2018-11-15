@@ -20,48 +20,179 @@ namespace MFW.WF.UX
         #endregion
 
         #region Properties
-        private CustomMessageBoxButton _btns = CustomMessageBoxButton.OK;
-        public CustomMessageBoxButton Btns
+        public Control OwnerCtr { get; set; }
+        public MessageBoxButtonType MessageBoxButtonType
         {
-            get { return _btns; }
-            set { _btns = value; }
+            set
+            {
+                switch(value)
+                {
+                   case  MessageBoxButtonType.None:{
+                            this.btnOK.Visible = false;
+                            this.btnCancel.Visible = false;
+                            this.btnNo.Visible = false;
+                        }
+                        break;
+                    case MessageBoxButtonType.OK:
+                        {
+                            this.btnOK.Image = global::MFW.WF.Properties.Resources.ok24;
+                            this.btnOK.Left = 115;
+                            this.btnOK.Text = "确定  ";
+                            this.btnOK.Visible = true;
+
+                            this.btnCancel.Visible = false;
+                            this.btnNo.Visible = false;
+                        }
+                        break;
+                    case MessageBoxButtonType.OKCancel:
+                        {
+                            this.btnOK.Image = global::MFW.WF.Properties.Resources.ok24;
+                            this.btnOK.Left = 30;
+                            this.btnOK.Text = "确定  ";
+                            this.btnOK.Visible = true;
+
+
+                            this.btnCancel.Image = global::MFW.WF.Properties.Resources.cancel24;
+                            this.btnCancel.Left = 200;
+                            this.btnCancel.Text = "取消  ";
+                            this.btnCancel.Visible = true;
+
+                            this.btnNo.Visible = false;
+                        }
+                        break;
+                    case MessageBoxButtonType.YesNo:
+                        {
+                            this.btnOK.Image = global::MFW.WF.Properties.Resources.ok24;
+                            this.btnOK.Left = 30;
+                            this.btnOK.Text = "是    ";
+                            this.btnOK.Visible = true;
+
+
+                            this.btnNo.Image = global::MFW.WF.Properties.Resources.cancel24;
+                            this.btnNo.Left = 200;
+                            this.btnNo.Text = "否    ";
+                            this.btnNo.Visible = true;
+
+                            this.btnCancel.Visible = false;
+                        }
+                        break;
+                    case MessageBoxButtonType.YesNoCancel:
+                        {
+                            this.btnOK.Image = global::MFW.WF.Properties.Resources.ok24;
+                            this.btnOK.Left = 10;
+                            this.btnOK.Text = "是    ";
+                            this.btnOK.Visible = true;
+
+
+                            this.btnNo.Image = global::MFW.WF.Properties.Resources.cancel24;
+                            this.btnNo.Left = 115;
+                            this.btnNo.Text = "否    ";
+                            this.btnNo.Visible = true;
+
+                            this.btnCancel.Image = global::MFW.WF.Properties.Resources.cancel24;
+                            this.btnCancel.Left =220;
+                            this.btnCancel.Text = "取消  ";
+                            this.btnCancel.Visible = true;
+                        }
+                        break;
+                    case MessageBoxButtonType.Answer:
+                        {
+                            this.btnOK.Image = global::MFW.WF.Properties.Resources.call24;
+                            this.btnOK.Left = 115;
+                            this.btnOK.Text = "接听  ";
+                            this.btnOK.Visible = true;
+
+                            this.btnCancel.Visible = false;
+                            this.btnNo.Visible = false;
+                        }
+                        break;
+                    case MessageBoxButtonType.Hangup:
+                        {
+                            this.btnOK.Image = global::MFW.WF.Properties.Resources.hangup24;
+                            this.btnOK.Left = 115;
+                            this.btnOK.Text = "挂断  ";
+                            this.btnOK.Visible = true;
+
+                            this.btnCancel.Visible = false;
+                            this.btnNo.Visible = false;
+                        }
+                        break;
+                    case MessageBoxButtonType.AnswerHangup:
+                        {
+                            this.btnOK.Image = global::MFW.WF.Properties.Resources.call24;
+                            this.btnOK.Left = 30;
+                            this.btnOK.Text = "接听  ";
+                            this.btnOK.Visible = true;
+
+
+                            this.btnCancel.Image = global::MFW.WF.Properties.Resources.hangup24;
+                            this.btnCancel.Left = 200;
+                            this.btnCancel.Text = "挂断  ";
+                            this.btnCancel.Visible = true;
+
+                            this.btnNo.Visible = false;
+                        }
+                        break;
+                    default:
+                        {
+                            this.btnOK.Visible = false;
+                            this.btnCancel.Visible = false;
+                            this.btnNo.Visible = false;
+                        }
+                        break;                
+                }
+            }
         }
-        private CustomMessageBoxIcon _messageIcon = CustomMessageBoxIcon.None;
-        public CustomMessageBoxIcon MessageIcon
+        
+        public MessageBoxIcon MessageBoxIcon
         {
-            get { return _messageIcon; }
-            set { _messageIcon = value; }
+            set
+            {
+                switch(value)
+                {
+                    case MessageBoxIcon.None:
+                        {
+                            msgIcon.Visible = false;
+                        }
+                        break;
+                    case MessageBoxIcon.Error:
+                        {
+                            msgIcon.Visible = true;
+                            msgIcon.Image = Properties.Resources.error;
+                        }
+                        break;
+                    case MessageBoxIcon.Information:
+                        {
+                            msgIcon.Visible = true;
+                            msgIcon.Image = Properties.Resources.info;
+                        }
+                        break;
+                    case MessageBoxIcon.Question:
+                        {
+                            msgIcon.Visible = true;
+                            msgIcon.Image = Properties.Resources.question;
+                        }break;
+                    case MessageBoxIcon.Warning:
+                        {
+                            msgIcon.Visible = true;
+                            msgIcon.Image = Properties.Resources.alert;
+                        }break;
+                    default:
+                        {
+                            msgIcon.Visible = false;
+                        }break;
+                }
+            }
         }
 
-        public string Message { get; set; }
-
-        private string _okButtonText = "确定  ";
-        public string OKButonText
+        public string Message
         {
-            get { return _okButtonText; }
-            set { _okButtonText = value; }
+            set
+            {
+                this.lblMsg.Text = value;
+            }
         }
-
-        private string _yesButtonText = "是  ";
-        public string YesButonText
-        {
-            get { return _yesButtonText; }
-            set { _yesButtonText = value; }
-        }
-
-        private string _noButtonText = "否  ";
-        public string NoButonText
-        {
-            get { return _noButtonText; }
-            set { _noButtonText = value; }
-        }
-
-        private string _cancelButtonText = "取消  ";
-        public string CancelButonText
-        {
-            get { return _cancelButtonText; }
-            set { _cancelButtonText = value; }
-        }
+        
         #endregion
 
 
@@ -69,196 +200,49 @@ namespace MFW.WF.UX
         public Action OKAction { get; set; }
         private void btnOK_Click(object sender, EventArgs e)
         {
+            this.DialogResult = DialogResult.OK;
             OKAction?.Invoke();
+            if (null != OwnerCtr)
+            {
+                OwnerCtr.Visible = false;
+            }
             this.Close();
         }
 
         public Action CancelAction { get; set; }
         private void btnCancel_Click(object sender, EventArgs e)
         {
+            this.DialogResult = DialogResult.Cancel;
             CancelAction?.Invoke();
+            if (null != OwnerCtr)
+            {
+                OwnerCtr.Visible = false;
+            }
+            this.Close();
+        }
+        public Action NoAction { get; set; }
+        private void btnNo_Click(object sender, EventArgs e)
+        {
+            this.DialogResult = DialogResult.No;
+            NoAction?.Invoke();
+            if (null != OwnerCtr)
+            {
+                OwnerCtr.Visible = false;
+            }
             this.Close();
         }
         #endregion
-
-        public void ShowMessage()
-        {
-            this.Visibility = Visibility.Visible;
-            #region CustomMessageBoxButton
-            switch (Btns)
-            {
-                case CustomMessageBoxButton.OK:
-                    {
-                        btnOk.Content = OKButonText;
-                        btnOk.Icon = new BitmapImage(new Uri(@"/Assets/Icons/ok.png", UriKind.Relative));
-                        btnOk.IsDefault = true;
-                        btnOk.Background = Brushes.CornflowerBlue;
-                        btnOk.Visibility = Visibility.Visible;
-                        btnYes.Visibility = Visibility.Collapsed;
-                        btnNo.Visibility = Visibility.Collapsed;
-                        btnCancel.Visibility = Visibility.Collapsed;
-                    }
-                    break;
-                case CustomMessageBoxButton.OKCancel:
-                    {
-                        btnOk.Content = OKButonText;
-                        btnOk.Icon = new BitmapImage(new Uri(@"/Assets/Icons/ok.png", UriKind.Relative));
-                        btnOk.Visibility = Visibility.Visible;
-                        btnOk.Background = Brushes.CornflowerBlue;
-                        btnOk.IsDefault = true;
-                        btnCancel.Content = CancelButonText;
-                        btnCancel.Background = Brushes.LightGray;
-                        btnCancel.Icon = new BitmapImage(new Uri(@"/Assets/Icons/cancel.png", UriKind.Relative));
-                        btnCancel.Visibility = Visibility.Visible;
-                        btnYes.Visibility = Visibility.Collapsed;
-                        btnNo.Visibility = Visibility.Collapsed;
-                    }
-                    break;
-                case CustomMessageBoxButton.YesNo:
-                    {
-                        btnOk.Visibility = Visibility.Collapsed;
-                        btnCancel.Visibility = Visibility.Collapsed;
-                        btnYes.Visibility = Visibility.Visible;
-                        btnYes.Content = YesButonText;
-                        btnYes.Background = Brushes.CornflowerBlue;
-                        btnYes.Icon = new BitmapImage(new Uri(@"/Assets/Icons/ok.png", UriKind.Relative));
-                        btnYes.IsDefault = true;
-                        btnNo.Content = NoButonText;
-                        btnNo.Background = Brushes.LightGray;
-                        btnNo.Icon = new BitmapImage(new Uri(@"/Assets/Icons/cancel.png", UriKind.Relative));
-                        btnNo.Visibility = Visibility.Visible;
-                    }
-                    break;
-                case CustomMessageBoxButton.YesNoCancel:
-                    {
-                        btnOk.Visibility = Visibility.Collapsed;
-                        btnCancel.Content = CancelButonText;
-                        btnCancel.Background = Brushes.LightGray;
-                        btnCancel.Icon = new BitmapImage(new Uri(@"/Assets/Icons/cancel.png", UriKind.Relative));
-                        btnCancel.Visibility = Visibility.Visible;
-                        btnYes.Visibility = Visibility.Visible;
-                        btnYes.Content = YesButonText;
-                        btnYes.IsDefault = true;
-                        btnYes.Background = Brushes.CornflowerBlue;
-                        btnYes.Icon = new BitmapImage(new Uri(@"/Assets/Icons/ok.png", UriKind.Relative));
-                        btnNo.Content = NoButonText;
-                        btnNo.Background = Brushes.DarkTurquoise;
-                        btnNo.Icon = new BitmapImage(new Uri(@"/Assets/Icons/cancel.png", UriKind.Relative));
-                        btnNo.Visibility = Visibility.Visible;
-                    }
-                    break;
-                case CustomMessageBoxButton.Answer:
-                    {
-                        btnOk.Content = "接听";
-                        btnOk.Icon = new BitmapImage(new Uri(@"/Assets/Icons/answer.png", UriKind.Relative));
-                        btnOk.IsDefault = true;
-                        btnOk.Background = Brushes.CornflowerBlue;
-                        btnOk.Visibility = Visibility.Visible;
-                        btnYes.Visibility = Visibility.Collapsed;
-                        btnNo.Visibility = Visibility.Collapsed;
-                        btnCancel.Visibility = Visibility.Collapsed;
-                    }
-                    break;
-                case CustomMessageBoxButton.Hangup:
-                    {
-                        btnOk.Content = "挂断";
-                        btnOk.Icon = new BitmapImage(new Uri(@"/Assets/Icons/hangup.png", UriKind.Relative));
-                        btnOk.IsDefault = true;
-                        btnOk.Background = Brushes.CornflowerBlue;
-                        btnOk.Foreground = Brushes.Red;
-                        btnOk.Visibility = Visibility.Visible;
-                        btnYes.Visibility = Visibility.Collapsed;
-                        btnNo.Visibility = Visibility.Collapsed;
-                        btnCancel.Visibility = Visibility.Collapsed;
-                    }
-                    break;
-                case CustomMessageBoxButton.AnswerHangup:
-                    {
-                        btnOk.Content = "接听";
-                        btnOk.Icon = new BitmapImage(new Uri(@"/Assets/Icons/answer.png", UriKind.Relative));
-                        btnOk.IsDefault = true;
-                        btnOk.Background = Brushes.CornflowerBlue;
-                        btnOk.Foreground = Brushes.Black;
-                        btnOk.Visibility = Visibility.Visible;
-                        btnCancel.Content = "挂断";
-                        btnCancel.Background = Brushes.LightGray;
-                        btnCancel.Foreground = Brushes.Red;
-                        btnCancel.Icon = new BitmapImage(new Uri(@"/Assets/Icons/hangup.png", UriKind.Relative));
-                        btnCancel.Visibility = Visibility.Visible;
-                        btnYes.Visibility = Visibility.Collapsed;
-                        btnNo.Visibility = Visibility.Collapsed;
-                    }
-                    break;
-            }
-            #endregion
-            #region CustomMessageBoxIcon
-            switch (MessageIcon)
-            {
-                case CustomMessageBoxIcon.None:
-                    {
-                        msgIcon.Visibility = Visibility.Collapsed;
-                    }
-                    break;
-                case CustomMessageBoxIcon.Error:
-                    {
-                        msgIcon.Visibility = Visibility.Visible;
-                        msgIcon.Source = new BitmapImage(new Uri(@"/Assets/Icons/error.png", UriKind.Relative));
-                    }
-                    break;
-                case CustomMessageBoxIcon.Info:
-                    {
-                        msgIcon.Visibility = Visibility.Visible;
-                        msgIcon.Source = new BitmapImage(new Uri(@"/Assets/Icons/info.png", UriKind.Relative));
-                    }
-                    break;
-                case CustomMessageBoxIcon.Question:
-                    {
-                        msgIcon.Visibility = Visibility.Visible;
-                        msgIcon.Source = new BitmapImage(new Uri(@"/Assets/Icons/question.png", UriKind.Relative));
-                    }
-                    break;
-                case CustomMessageBoxIcon.Warning:
-                    {
-                        msgIcon.Visibility = Visibility.Visible;
-                        msgIcon.Source = new BitmapImage(new Uri(@"/Assets/Icons/alert.png", UriKind.Relative));
-                    }
-                    break;
-            }
-            #endregion
-            this.lblMsg.Text = Message;
-        }
-
-        public void HideMessage()
-        {
-            this.Close();
-        }
     }
 
-    /// <summary>
-    /// 显示按钮类型
-    /// </summary>
-    public enum CustomMessageBoxButton
+    public enum MessageBoxButtonType
     {
-        OK = 0,
-        OKCancel = 1,
-        YesNo = 2,
-        YesNoCancel = 3,
-        Answer = 4,
-        Hangup = 5,
-        AnswerHangup = 6
-    }
-    /// <summary>
-    /// 消息框的返回值
-    /// </summary>
-    /// <summary>
-    /// 图标类型
-    /// </summary>
-    public enum CustomMessageBoxIcon
-    {
-        None = 0,
-        Info,
-        Error,
-        Question,
-        Warning
+        None=0,
+        OK ,
+        OKCancel ,
+        YesNo,
+        YesNoCancel ,
+        Answer ,
+        Hangup ,
+        AnswerHangup 
     }
 }
