@@ -100,7 +100,7 @@ namespace MFW.WF
                     }
                     break;
             }
-
+            
         }
         private void onCallWindowClosedHandle(object sender, EventArgs args)
         {
@@ -617,26 +617,47 @@ namespace MFW.WF
 
         private void Answer(int callHandle)
         {
-            if(cbxVideoInput.SelectedIndex<0)
+            var call = callManager.GetCall(callHandle);
+            if (null != call)
             {
-               // LAL.Answer()
-            }
-            else
-            {
-
+                if(!LAL.Answer(call,call.CallMode,true))
+                {
+                    MessageBox.Show(this, "接听失败！", "消息框", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
             }
         }
         public void Hold(int callHandle)
         {
-
+            var call = callManager.GetCall(callHandle);
+            if (null != call)
+            {
+                if (!LAL.Hold(call))
+                {
+                    MessageBox.Show(this, "接听保持失败！", "消息框", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+            }
         }
         private void Resume(int callHandle)
         {
-
+            var call = callManager.GetCall(callHandle);
+            if (null != call)
+            {
+                if (!LAL.Resume(call))
+                {
+                    MessageBox.Show(this, "接听保持恢复失败！", "消息框", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+            }
         }
         private void Hangup(int callHandle)
         {
-           // lalProperties.SetProperty(PropertyEnum.VIDEO_INPUT_DEVICE, cbxVideoInput.SelectedValue.ToString())
+            var call = callManager.GetCall(callHandle);
+            if (null != call)
+            {
+                if (!LAL.Hangup(call))
+                {
+                    MessageBox.Show(this, "挂断失败！", "消息框", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+            }
         }
         #endregion
     }

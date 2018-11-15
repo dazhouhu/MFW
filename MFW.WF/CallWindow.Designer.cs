@@ -43,8 +43,11 @@
             this.moreMenu = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.menuItemDTMF = new System.Windows.Forms.ToolStripMenuItem();
             this.menuItemFECC = new System.Windows.Forms.ToolStripMenuItem();
-            this.menuItemSmartWin = new System.Windows.Forms.ToolStripMenuItem();
-            this.contextMenuStrip1 = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.menuItemLayout = new System.Windows.Forms.ToolStripMenuItem();
+            this.menuItemP = new System.Windows.Forms.ToolStripMenuItem();
+            this.menuItemVAS = new System.Windows.Forms.ToolStripMenuItem();
+            this.menuItemCP = new System.Windows.Forms.ToolStripMenuItem();
+            this.menuItemSingle = new System.Windows.Forms.ToolStripMenuItem();
             this.pnlView.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.tbSpeakerVolume)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.tbMicVolume)).BeginInit();
@@ -238,7 +241,7 @@
             this.moreMenu.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.menuItemDTMF,
             this.menuItemFECC,
-            this.menuItemSmartWin});
+            this.menuItemLayout});
             this.moreMenu.Name = "moreMenu";
             this.moreMenu.Size = new System.Drawing.Size(154, 70);
             // 
@@ -247,23 +250,53 @@
             this.menuItemDTMF.Name = "menuItemDTMF";
             this.menuItemDTMF.Size = new System.Drawing.Size(153, 22);
             this.menuItemDTMF.Text = "DTMF报号盘";
+            this.menuItemDTMF.Click += new System.EventHandler(this.menuItemDTMF_Click);
             // 
             // menuItemFECC
             // 
             this.menuItemFECC.Name = "menuItemFECC";
             this.menuItemFECC.Size = new System.Drawing.Size(153, 22);
             this.menuItemFECC.Text = "FECC远程控制";
+            this.menuItemFECC.Click += new System.EventHandler(this.menuItemFECC_Click);
             // 
-            // menuItemSmartWin
+            // menuItemLayout
             // 
-            this.menuItemSmartWin.Name = "menuItemSmartWin";
-            this.menuItemSmartWin.Size = new System.Drawing.Size(153, 22);
-            this.menuItemSmartWin.Text = "显示小黄页";
+            this.menuItemLayout.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.menuItemP,
+            this.menuItemVAS,
+            this.menuItemCP,
+            this.menuItemSingle});
+            this.menuItemLayout.Name = "menuItemLayout";
+            this.menuItemLayout.Size = new System.Drawing.Size(153, 22);
+            this.menuItemLayout.Text = "布局";
             // 
-            // contextMenuStrip1
+            // menuItemP
             // 
-            this.contextMenuStrip1.Name = "contextMenuStrip1";
-            this.contextMenuStrip1.Size = new System.Drawing.Size(61, 4);
+            this.menuItemP.Name = "menuItemP";
+            this.menuItemP.Size = new System.Drawing.Size(225, 22);
+            this.menuItemP.Text = "Presentation 布局";
+            this.menuItemP.Click += new System.EventHandler(this.menuItemP_Click);
+            // 
+            // menuItemVAS
+            // 
+            this.menuItemVAS.Name = "menuItemVAS";
+            this.menuItemVAS.Size = new System.Drawing.Size(225, 22);
+            this.menuItemVAS.Text = "VAS 布局";
+            this.menuItemVAS.Click += new System.EventHandler(this.menuItemVAS_Click);
+            // 
+            // menuItemCP
+            // 
+            this.menuItemCP.Name = "menuItemCP";
+            this.menuItemCP.Size = new System.Drawing.Size(225, 22);
+            this.menuItemCP.Text = "Continuous Presence 布局";
+            this.menuItemCP.Click += new System.EventHandler(this.menuItemCP_Click);
+            // 
+            // menuItemSingle
+            // 
+            this.menuItemSingle.Name = "menuItemSingle";
+            this.menuItemSingle.Size = new System.Drawing.Size(225, 22);
+            this.menuItemSingle.Text = "单页显示";
+            this.menuItemSingle.Click += new System.EventHandler(this.menuItemSingle_Click);
             // 
             // CallWindow
             // 
@@ -272,13 +305,14 @@
             this.ClientSize = new System.Drawing.Size(800, 600);
             this.Controls.Add(this.pnlToolBars);
             this.Controls.Add(this.pnlView);
-            this.MinimumSize = new System.Drawing.Size(800, 600);
+            this.MinimumSize = new System.Drawing.Size(816, 638);
             this.Name = "CallWindow";
             this.ShowInTaskbar = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "CallWindow";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.CallWindow_FormClosing);
             this.Load += new System.EventHandler(this.CallWindow_Load);
+            this.SizeChanged += new System.EventHandler(this.CallWindow_SizeChanged);
             this.pnlView.ResumeLayout(false);
             this.pnlView.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.tbSpeakerVolume)).EndInit();
@@ -304,8 +338,11 @@
         private System.Windows.Forms.ContextMenuStrip moreMenu;
         private System.Windows.Forms.ToolStripMenuItem menuItemDTMF;
         private System.Windows.Forms.ToolStripMenuItem menuItemFECC;
-        private System.Windows.Forms.ToolStripMenuItem menuItemSmartWin;
+        private System.Windows.Forms.ToolStripMenuItem menuItemLayout;
         private System.Windows.Forms.TrackBar tbMicVolume;
-        private System.Windows.Forms.ContextMenuStrip contextMenuStrip1;
+        private System.Windows.Forms.ToolStripMenuItem menuItemP;
+        private System.Windows.Forms.ToolStripMenuItem menuItemVAS;
+        private System.Windows.Forms.ToolStripMenuItem menuItemCP;
+        private System.Windows.Forms.ToolStripMenuItem menuItemSingle;
     }
 }

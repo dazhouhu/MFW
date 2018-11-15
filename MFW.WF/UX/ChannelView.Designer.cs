@@ -29,12 +29,12 @@
         private void InitializeComponent()
         {
             this.pnlVideo = new System.Windows.Forms.Panel();
-            this.lblName = new System.Windows.Forms.Label();
             this.nlBar = new System.Windows.Forms.Panel();
             this.pnlBtns = new System.Windows.Forms.Panel();
             this.btnVideo = new System.Windows.Forms.Button();
             this.btnAudio = new System.Windows.Forms.Button();
             this.lblChannelName = new System.Windows.Forms.Label();
+            this.lblName = new System.Windows.Forms.Label();
             this.pnlVideo.SuspendLayout();
             this.nlBar.SuspendLayout();
             this.pnlBtns.SuspendLayout();
@@ -49,19 +49,8 @@
             this.pnlVideo.Location = new System.Drawing.Point(0, 0);
             this.pnlVideo.Margin = new System.Windows.Forms.Padding(0);
             this.pnlVideo.Name = "pnlVideo";
-            this.pnlVideo.Size = new System.Drawing.Size(320, 280);
+            this.pnlVideo.Size = new System.Drawing.Size(316, 216);
             this.pnlVideo.TabIndex = 0;
-            // 
-            // lblName
-            // 
-            this.lblName.AutoSize = true;
-            this.lblName.Font = new System.Drawing.Font("宋体", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.lblName.ForeColor = System.Drawing.Color.Red;
-            this.lblName.Location = new System.Drawing.Point(16, 12);
-            this.lblName.Name = "lblName";
-            this.lblName.Size = new System.Drawing.Size(33, 12);
-            this.lblName.TabIndex = 0;
-            this.lblName.Text = "Name";
             // 
             // nlBar
             // 
@@ -70,10 +59,10 @@
             this.nlBar.BackColor = System.Drawing.SystemColors.ControlDarkDark;
             this.nlBar.Controls.Add(this.pnlBtns);
             this.nlBar.Controls.Add(this.lblChannelName);
-            this.nlBar.Location = new System.Drawing.Point(3, 240);
+            this.nlBar.Location = new System.Drawing.Point(3, 176);
             this.nlBar.Margin = new System.Windows.Forms.Padding(0);
             this.nlBar.Name = "nlBar";
-            this.nlBar.Size = new System.Drawing.Size(320, 40);
+            this.nlBar.Size = new System.Drawing.Size(316, 40);
             this.nlBar.TabIndex = 1;
             // 
             // pnlBtns
@@ -81,7 +70,7 @@
             this.pnlBtns.Controls.Add(this.btnVideo);
             this.pnlBtns.Controls.Add(this.btnAudio);
             this.pnlBtns.Dock = System.Windows.Forms.DockStyle.Right;
-            this.pnlBtns.Location = new System.Drawing.Point(240, 0);
+            this.pnlBtns.Location = new System.Drawing.Point(236, 0);
             this.pnlBtns.Name = "pnlBtns";
             this.pnlBtns.Size = new System.Drawing.Size(80, 40);
             this.pnlBtns.TabIndex = 1;
@@ -121,14 +110,26 @@
             this.lblChannelName.Text = "Channel Name";
             this.lblChannelName.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
+            // lblName
+            // 
+            this.lblName.AutoSize = true;
+            this.lblName.Font = new System.Drawing.Font("宋体", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.lblName.ForeColor = System.Drawing.Color.Red;
+            this.lblName.Location = new System.Drawing.Point(16, 12);
+            this.lblName.Name = "lblName";
+            this.lblName.Size = new System.Drawing.Size(33, 12);
+            this.lblName.TabIndex = 0;
+            this.lblName.Text = "Name";
+            // 
             // ChannelView
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.SystemColors.ButtonShadow;
+            this.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
             this.Controls.Add(this.pnlVideo);
             this.Name = "ChannelView";
-            this.Size = new System.Drawing.Size(320, 280);
+            this.Size = new System.Drawing.Size(316, 216);
             this.Load += new System.EventHandler(this.ChannelView_Load);
             this.SizeChanged += new System.EventHandler(this.ChannelView_SizeChanged);
             this.pnlVideo.ResumeLayout(false);

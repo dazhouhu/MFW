@@ -18,8 +18,8 @@ namespace MFW.WF
             Application.SetCompatibleTextRenderingDefault(false);
             // Application.Run(new TestWindow());
             // return;
-            //Application.Run(new CallWindow(new LALLib.Call(11)));
-            //return;
+            Application.Run(new CallWindow(new LALLib.Call(11)));
+            return;
 
             LoginWindow loginWindow = new LoginWindow();
             loginWindow.ShowDialog();

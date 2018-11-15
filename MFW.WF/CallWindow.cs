@@ -36,8 +36,24 @@ namespace MFW.WF
             _call.Channels.CollectionChanged += OnChannelsCllectionChangedHandle;
         }
         #endregion
-        
-        
+
+        #region Properties
+        private CallLayoutType _callLayoutType;
+        public CallLayoutType CallLayoutType
+        {
+            get { return _callLayoutType; }
+            set
+            {
+                if (_callLayoutType != value)
+                {
+                    _callLayoutType = value;
+                    ViewRender();
+                }
+            }
+        }
+        #endregion
+
+
         #region CallBack
         private void OnCallPropertyChangedHandle(object sender , PropertyChangedEventArgs args)
         {
@@ -150,30 +166,380 @@ namespace MFW.WF
         #region View Render
         private void ViewRender()
         {
-            var viewWidth = pnlView.Width;
-            var viewHeight = pnlView.Height;
-            var cellWidth = 320 * viewWidth / 800;
-            var cellHeigth = 280 * viewHeight / 600;
-            var i = 1;
-            foreach(var channelViewKV in channelViews)
+            if(channelViews.Count<=0)
             {
-                var view = channelViewKV.Value;
-                if(channelViewKV.Key== _call.ActiveSpeakerId)
-                {
-                    view.Location = new Point(0,0);
-                    view.Size = new Size(viewWidth, viewHeight);
-                    view.Anchor = AnchorStyles.Left | AnchorStyles.Top | AnchorStyles.Right | AnchorStyles.Bottom;
-                    view.SendToBack();
-                }
-                else
-                {
-                    view.Location = new Point(viewWidth - cellWidth, viewHeight - cellHeigth * i);
-                    view.Size = new Size(cellWidth, cellHeigth);
-                    view.Anchor = AnchorStyles.Right | AnchorStyles.Bottom;
-                    view.BringToFront();
-                    i++;
-                }
-                view.PaintView();
+                return;
+            }
+
+            #region RendMode
+            var mode = VideoLayoutModeEnum.SVC_LAYOUT_MODE_0X0;
+            switch (CallLayoutType)
+            {
+                case CallLayoutType.VAS:
+                    mode = VideoLayoutModeEnum.SVC_LAYOUT_MODE_1X1;
+                    break;
+                case CallLayoutType.ContinuousPresence:
+                    {
+                        switch (_call.Channels.Count)
+                        {
+                            case 1:
+                                mode = VideoLayoutModeEnum.SVC_LAYOUT_MODE_1X1;
+                                break;
+                            case 2:
+                                mode = VideoLayoutModeEnum.SVC_LAYOUT_MODE_2X1;
+                                break;
+                            case 3:
+                            case 4:
+                                mode = VideoLayoutModeEnum.SVC_LAYOUT_MODE_2X2;
+                                break;
+                            case 5:
+                            case 6:
+                            case 7:
+                            case 8:
+                            case 9:
+                                mode = VideoLayoutModeEnum.SVC_LAYOUT_MODE_3X3;
+                                break;
+                            case 10:
+                            case 11:
+                            case 12:
+                            case 13:
+                            case 14:
+                            case 15:
+                            case 16:
+                                mode = VideoLayoutModeEnum.SVC_LAYOUT_MODE_4X4;
+                                break;
+                        }
+                    }
+                    break;
+                case CallLayoutType.Presentation:
+                    {
+                        switch (_call.Channels.Count)
+                        {
+                            case 1:
+                                mode = VideoLayoutModeEnum.SVC_LAYOUT_MODE_1X1;
+                                break;
+                            case 2:
+                                mode = VideoLayoutModeEnum.SVC_LAYOUT_MODE_2X1;
+                                break;
+                            case 3:
+                            case 4:
+                            case 5:
+                            case 6:
+                                mode = VideoLayoutModeEnum.SVC_LAYOUT_MODE_1P5;
+                                break;
+                            case 7:
+                            case 8:
+                                mode = VideoLayoutModeEnum.SVC_LAYOUT_MODE_1P7;
+                                break;
+                            case 9:
+                            case 10:
+                            case 11:
+                            case 12:
+                            case 13:
+                                mode = VideoLayoutModeEnum.SVC_LAYOUT_MODE_1P12;
+                                break;
+                            case 14:
+                            case 15:
+                            case 16:
+                                mode = VideoLayoutModeEnum.SVC_LAYOUT_MODE_1P16;
+                                break;
+                        }
+                    }
+                    break;
+                case CallLayoutType.Sigle:
+                    mode = VideoLayoutModeEnum.SVC_LAYOUT_MODE_0X0;
+                    break;
+              }
+            #endregion
+
+            var viewWidth = pnlView.Width;
+            var viewHeight = pnlView.Height-80;
+            var ratioWidth =  320;
+            var ratioHeight = 220;
+            var cellWidth = 320 ;
+            var cellHeigth = 220;
+
+            var activeView = channelViews.Where(v => v.Key == _call.ActiveSpeakerId).Select(v=>v.Value).FirstOrDefault();
+            if(null == activeView)
+            {
+                _call.ActiveSpeakerId = channelViews.Last().Key;
+            }
+            var notActiveViews= channelViews.Where(v => v.Key != _call.ActiveSpeakerId).Select(v=>v.Value).ToList();
+
+            switch(mode)
+            {
+                case VideoLayoutModeEnum.SVC_LAYOUT_MODE_0X0:
+                    {
+                        activeView.Location = new Point(0, 0);
+                        activeView.Size = new Size(viewWidth, viewHeight);
+                        activeView.Visible = true;
+                        activeView.IsShowBar = false;
+                        activeView.BringToFront();
+
+                        foreach(var notActiveView in notActiveViews)
+                        {
+                            notActiveView.Visible = false;
+                            notActiveView.IsShowBar = true;
+                        }
+                    }
+                    break;
+                case VideoLayoutModeEnum.SVC_LAYOUT_MODE_1X1:
+                    {
+                        activeView.Location = new Point(0, 0);
+                        activeView.Size = new Size(viewWidth, viewHeight);
+                        activeView.Visible = true;
+                        activeView.IsShowBar = false;
+                        activeView.SendToBack();
+
+                        var i = 1;
+                        foreach (var notActiveView in notActiveViews)
+                        {
+                            notActiveView.Location = new Point(viewWidth - cellWidth, viewHeight - cellHeigth * i);
+                            notActiveView.Size = new Size(cellWidth, cellHeigth);
+                            notActiveView.Visible = true;
+                            notActiveView.IsShowBar = true;
+                            notActiveView.BringToFront();
+                            i++;
+                        }
+                    }
+                    break;
+                case VideoLayoutModeEnum.SVC_LAYOUT_MODE_2X1:
+                    {
+                        cellWidth = viewWidth / 2;
+                        cellHeigth = cellWidth * ratioHeight / ratioWidth;
+                        int x = 0;
+                        int y = (viewHeight - cellHeigth) / 2;
+                        foreach (var view in channelViews.Values)
+                        {
+                            view.Location = new Point(x, y);
+                            view.Size = new Size(cellWidth, cellHeigth);
+                            view.Visible = true;
+                            view.IsShowBar = true;
+                            view.BringToFront();
+                            x = x + cellWidth;
+                        }
+                    }
+                    break;
+                case VideoLayoutModeEnum.SVC_LAYOUT_MODE_2X2:
+                    {
+                        cellHeigth = viewHeight / 2;
+                        cellWidth = cellHeigth * ratioHeight / ratioHeight;
+                        int initX = (viewWidth - 2*cellWidth) / 2;
+                        var x = initX;
+                        int y = 0;
+                        var i = 0;
+                        foreach (var view in channelViews.Values)
+                        {
+                            view.Location = new Point(x, y);
+                            view.Size = new Size(cellWidth, cellHeigth);
+                            view.Visible = true;
+                            view.IsShowBar = true;
+                            view.BringToFront();
+                            x = x + cellWidth;
+                            i++;
+                            if (i % 2 == 0)
+                            {
+                                x = initX;
+                                y = y + cellHeigth;
+                            }
+                        }
+                    }
+                    break;
+                case VideoLayoutModeEnum.SVC_LAYOUT_MODE_3X3:
+                    {
+                        cellHeigth = viewHeight / 3;
+                        cellWidth = cellHeigth * ratioHeight / ratioHeight;
+                        int initX = (viewWidth - 3*cellWidth) / 2;
+                        var x = initX;
+                        int y = 0;
+                        var i = 0;
+                        foreach (var view in channelViews.Values)
+                        {
+                            view.Location = new Point(x, y);
+                            view.Size = new Size(cellWidth, cellHeigth);
+                            view.Visible = true;
+                            view.IsShowBar = true;
+                            view.BringToFront();
+                            x = x + cellWidth;
+                            i++;
+                            if (i % 3 == 0)
+                            {
+                                x = initX;
+                                y = y + cellHeigth;
+                            }
+                        }
+                    }
+                    break;
+                case VideoLayoutModeEnum.SVC_LAYOUT_MODE_4X4:
+                    {
+                        cellHeigth = viewHeight / 4;
+                        cellWidth = cellHeigth * ratioHeight / ratioHeight;
+                        int initX = (viewWidth - 4*cellWidth) / 2;
+                        var x = initX;
+                        int y = 0;
+                        var i = 0;
+                        foreach (var view in channelViews.Values)
+                        {
+                            view.Location = new Point(x, y);
+                            view.Size = new Size(cellWidth, cellHeigth);
+                            view.Visible = true;
+                            view.IsShowBar = true;
+                            view.BringToFront();
+                            x = x + cellWidth;
+                            i++;
+                            if (i % 4 == 0)
+                            {
+                                x = initX;
+                                y = y + cellHeigth;
+                            }
+                        }
+                    }
+                    break;
+                case VideoLayoutModeEnum.SVC_LAYOUT_MODE_1P5:
+                    {
+                        cellHeigth = viewHeight / 3;
+                        cellWidth = cellHeigth * ratioHeight / ratioHeight;
+                        int x = (viewWidth - 3*cellWidth) / 2;
+                        int y = 0;
+                        activeView.Location = new Point(x, y);
+                        activeView.Size = new Size(cellWidth*2, cellHeigth*2);
+                        activeView.Visible = true;
+                        activeView.IsShowBar = true;
+                        activeView.BringToFront();
+                        for (var i = 0; i < notActiveViews.Count; i++)
+                        {
+                            var notActiveView = notActiveViews[i];
+                            notActiveView.Size = new Size(cellWidth, cellHeigth);
+                            notActiveView.Visible = true;
+                            notActiveView.IsShowBar = true;
+                            notActiveView.BringToFront();
+                            switch (i)
+                            {
+                                case 0: notActiveView.Location = new Point(x + 2 * cellWidth, y); break;
+                                case 1: notActiveView.Location = new Point(x + 2 * cellWidth, y + cellHeigth); break;
+
+                                case 2: notActiveView.Location = new Point(x, y + 2 * cellHeigth); break;
+                                case 3: notActiveView.Location = new Point(x + cellWidth, y + 2 * cellHeigth); break;
+                                case 4: notActiveView.Location = new Point(x + 2 * cellWidth, y + 2 * cellHeigth); break;
+                            }
+                        }
+                    }
+                    break;
+                case VideoLayoutModeEnum.SVC_LAYOUT_MODE_1P7:
+                    {
+                        cellHeigth = viewHeight / 4;
+                        cellWidth = cellHeigth * ratioHeight / ratioHeight;
+                        int x = (viewWidth - 4*cellWidth) / 2;
+                        int y = 0;
+                        activeView.Location = new Point(x, y);
+                        activeView.Size = new Size(cellWidth*3, cellHeigth*3);
+                        activeView.Visible = true;
+                        activeView.IsShowBar = true;
+                        activeView.BringToFront();
+                        for (var i = 0; i < notActiveViews.Count; i++)
+                        {
+                            var notActiveView = notActiveViews[i];
+                            notActiveView.Size = new Size(cellWidth, cellHeigth);
+                            notActiveView.Visible = true;
+                            notActiveView.IsShowBar = true;
+                            notActiveView.BringToFront();
+                            switch (i)
+                            {
+                                case 0: notActiveView.Location = new Point(x + 3 * cellWidth, y); break;
+                                case 1: notActiveView.Location = new Point(x + 3* cellWidth, y + cellHeigth); break;
+                                case 2: notActiveView.Location = new Point(x + 3 * cellWidth, y + 2*cellHeigth); break;
+
+                                case 3: notActiveView.Location = new Point(x, y + 3 * cellHeigth); break;
+                                case 4: notActiveView.Location = new Point(x + cellWidth, y + 3 * cellHeigth); break;
+                                case 5: notActiveView.Location = new Point(x + 2 * cellWidth, y + 3* cellHeigth); break;
+                                case 6: notActiveView.Location = new Point(x + 3 * cellWidth, y + 3 * cellHeigth); break;
+                            }
+                        }
+                    }
+                    break;
+                case VideoLayoutModeEnum.SVC_LAYOUT_MODE_1P12:
+                    {
+                        cellHeigth = viewHeight / 4;
+                        cellWidth = cellHeigth * ratioHeight / ratioHeight;
+                        int x = (viewWidth - 4*cellWidth) / 2;
+                        int y = 0;
+                        activeView.Location = new Point(x+cellWidth, y+cellHeigth);
+                        activeView.Size = new Size(cellWidth*2, cellHeigth*2);
+                        activeView.Visible = true;
+                        activeView.IsShowBar = true;
+                        activeView.BringToFront();
+                        for(var i=0;i< notActiveViews.Count; i++)
+                        {
+                            var notActiveView = notActiveViews[i];
+                            notActiveView.Size = new Size(cellWidth, cellHeigth);
+                            notActiveView.Visible = true;
+                            notActiveView.IsShowBar = true;
+                            notActiveView.BringToFront();
+                            switch (i)
+                            {
+                                case 0: notActiveView.Location = new Point(x, y); break;
+                                case 1: notActiveView.Location = new Point(x + cellWidth, y); break;
+                                case 2: notActiveView.Location = new Point(x + 2 * cellWidth, y); break;
+                                case 3: notActiveView.Location = new Point(x + 3 * cellWidth, y); break;
+
+                                case 4: notActiveView.Location = new Point(x, y + cellHeigth); break;
+                                case 5: notActiveView.Location = new Point(x + 3 * cellWidth, y + cellHeigth); break;
+
+                                case 6: notActiveView.Location = new Point(x, y + 2 * cellHeigth); break;
+                                case 7: notActiveView.Location = new Point(x + 3 * cellWidth, y + 2 * cellHeigth); break;
+
+                                case 8: notActiveView.Location = new Point(x, y + 3 * cellHeigth); break;
+                                case 9: notActiveView.Location = new Point(x + cellWidth, y + 3 * cellHeigth); break;
+                                case 10: notActiveView.Location = new Point(x + 2 * cellWidth, y + 3 * cellHeigth); break;
+                                case 11: notActiveView.Location = new Point(x + 3 * cellWidth, y + 3 * cellHeigth); break;
+                            }
+                        }
+                    }
+                    break;
+                case VideoLayoutModeEnum.SVC_LAYOUT_MODE_1P16:
+                    {
+                        cellHeigth = viewHeight / 5;
+                        cellWidth = cellHeigth * ratioHeight / ratioHeight;
+                        int x = (viewWidth - 5*cellWidth) / 2;
+                        int y = 0;
+                        activeView.Location = new Point(x + cellWidth, y + cellHeigth);
+                        activeView.Size = new Size(cellWidth * 3, cellHeigth * 3);
+                        activeView.Visible = true;
+                        activeView.IsShowBar = true;
+                        activeView.BringToFront();
+                        for (var i = 0; i < notActiveViews.Count; i++)
+                        {
+                            var notActiveView = notActiveViews[i];
+                            notActiveView.Size = new Size(cellWidth, cellHeigth);
+                            notActiveView.Visible = true;
+                            notActiveView.IsShowBar = true;
+                            notActiveView.BringToFront();
+                            switch (i)
+                            {
+                                case 0: notActiveView.Location = new Point(x, y); break;
+                                case 1: notActiveView.Location = new Point(x + cellWidth, y); break;
+                                case 2: notActiveView.Location = new Point(x + 2 * cellWidth, y); break;
+                                case 3: notActiveView.Location = new Point(x + 3 * cellWidth, y); break;
+                                case 4: notActiveView.Location = new Point(x + 4 * cellWidth, y); break;
+
+                                case 5: notActiveView.Location = new Point(x, y + cellHeigth); break;
+                                case 6: notActiveView.Location = new Point(x + 4 * cellWidth, y + cellHeigth); break;
+
+                                case 7: notActiveView.Location = new Point(x, y + 2 * cellHeigth); break;
+                                case 8: notActiveView.Location = new Point(x + 4 * cellWidth, y + 2 * cellHeigth); break;
+
+                                case 9: notActiveView.Location = new Point(x, y + 3* cellHeigth); break;
+                                case 10: notActiveView.Location = new Point(x + 4 * cellWidth, y + 3 * cellHeigth); break;
+
+                                case 11: notActiveView.Location = new Point(x, y + 4 * cellHeigth); break;
+                                case 12: notActiveView.Location = new Point(x + cellWidth, y + 4 * cellHeigth); break;
+                                case 13: notActiveView.Location = new Point(x + 2 * cellWidth, y + 4 * cellHeigth); break;
+                                case 14: notActiveView.Location = new Point(x + 3 * cellWidth, y + 4 * cellHeigth); break;
+                                case 15: notActiveView.Location = new Point(x + 4 * cellWidth, y + 4 * cellHeigth); break;
+                            }
+                        }
+                    }
+                    break;
             }            
         }
         #endregion
@@ -248,7 +614,64 @@ namespace MFW.WF
             }
             #endregion
 
-            this._call.AddChannel(new Channel(this._call, 0, true, false));
+            var localChannel = new Channel(this._call, 0, true, false)
+            {
+                ChannelName = "本地视频",
+                IsAudio = false,
+                IsVideo = false
+            };
+            this._call.AddChannel(localChannel);
+
+            var localChannel1 = new Channel(this._call, 1, false, false)
+            {
+                ChannelName = "视频1",
+                IsAudio = false,
+                IsVideo = false
+            };
+            this._call.AddChannel(localChannel1);
+            var localChannel2 = new Channel(this._call, 2, false, false)
+            {
+                ChannelName = "视频2",
+                IsAudio = false,
+                IsVideo = false
+            };
+            this._call.AddChannel(localChannel2);
+            var localChannel3 = new Channel(this._call, 3, false, false)
+            {
+                ChannelName = "视频3",
+                IsAudio = false,
+                IsVideo = false
+            };
+            this._call.AddChannel(localChannel3);
+            var localChannel4 = new Channel(this._call, 4, false, false)
+            {
+                ChannelName = "视频4",
+                IsAudio = false,
+                IsVideo = false
+            };
+            this._call.AddChannel(localChannel4);
+            var localChannel5 = new Channel(this._call, 5, false, false)
+            {
+                ChannelName = "视频5",
+                IsAudio = false,
+                IsVideo = false
+            };
+            this._call.AddChannel(localChannel5);
+            var localChannel6 = new Channel(this._call, 6, false, false)
+            {
+                ChannelName = "视频6",
+                IsAudio = false,
+                IsVideo = false
+            };
+            this._call.AddChannel(localChannel6);
+
+            var localChannel7 = new Channel(this._call, 7, false, false)
+            {
+                ChannelName = "视频7",
+                IsAudio = false,
+                IsVideo = false
+            };
+            this._call.AddChannel(localChannel7);
         }
         private void btnMic_Click(object sender, EventArgs e)
         {
@@ -294,12 +717,12 @@ namespace MFW.WF
 
         private void btnShare_Click(object sender, EventArgs e)
         {
-
+            MessageBox.Show(this, "实现中", "消息框", MessageBoxButtons.OK, MessageBoxIcon.Error);
         }
 
         private void btnAttender_Click(object sender, EventArgs e)
         {
-
+            MessageBox.Show(this, "实现中", "消息框", MessageBoxButtons.OK, MessageBoxIcon.Error);
         }
 
         private void btnMore_Click(object sender, EventArgs e)
@@ -370,6 +793,11 @@ namespace MFW.WF
                 case CallStateEnum.SIP_OUTGOING_CONNECTED:
                     break;
             }
+        }
+
+        private void CallWindow_SizeChanged(object sender, EventArgs e)
+        {
+            ViewRender();
         }
         #endregion
 
@@ -517,8 +945,61 @@ namespace MFW.WF
                     break;
             }
         }
+
         #endregion
 
+        #region Menu
 
+        private void menuItemDTMF_Click(object sender, EventArgs e)
+        {
+            MessageBox.Show(this, "暂时不实现", "消息框", MessageBoxButtons.OK, MessageBoxIcon.Error);
+        }
+
+        private void menuItemFECC_Click(object sender, EventArgs e)
+        {
+            MessageBox.Show(this, "暂时不实现", "消息框", MessageBoxButtons.OK, MessageBoxIcon.Error);
+        }
+        private void menuItemP_Click(object sender, EventArgs e)
+        {
+            this.CallLayoutType = CallLayoutType.Presentation;
+        }
+
+        private void menuItemVAS_Click(object sender, EventArgs e)
+        {
+            this.CallLayoutType = CallLayoutType.VAS;
+        }
+
+        private void menuItemCP_Click(object sender, EventArgs e)
+        {
+            this.CallLayoutType = CallLayoutType.ContinuousPresence;
+        }
+        private void menuItemSingle_Click(object sender, EventArgs e)
+        {
+            this.CallLayoutType = CallLayoutType.Sigle;
+        }
+        #endregion
+
+    }
+
+
+    public enum CallLayoutType
+    {
+        Presentation,
+        VAS,
+        ContinuousPresence,
+        Sigle
+    }
+    enum VideoLayoutModeEnum
+    {
+        SVC_LAYOUT_MODE_0X0,
+        SVC_LAYOUT_MODE_1X1, 
+        SVC_LAYOUT_MODE_2X1, 
+        SVC_LAYOUT_MODE_2X2, 
+        SVC_LAYOUT_MODE_1P5,
+        SVC_LAYOUT_MODE_3X3, 
+        SVC_LAYOUT_MODE_4X4,
+        SVC_LAYOUT_MODE_1P7, 
+        SVC_LAYOUT_MODE_1P12,
+        SVC_LAYOUT_MODE_1P16  
     }
 }

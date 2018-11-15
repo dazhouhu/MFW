@@ -9,9 +9,10 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>MFW.WF</RootNamespace>
     <AssemblyName>MFW.WF</AssemblyName>
-    <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -81,6 +82,12 @@
     <Compile Include="UX\ChannelView.Designer.cs">
       <DependentUpon>ChannelView.cs</DependentUpon>
     </Compile>
+    <Compile Include="UX\UxMessageBox.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="UX\UxMessageBox.Designer.cs">
+      <DependentUpon>UxMessageBox.cs</DependentUpon>
+    </Compile>
     <EmbeddedResource Include="CallWindow.resx">
       <DependentUpon>CallWindow.cs</DependentUpon>
     </EmbeddedResource>
@@ -98,12 +105,16 @@
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DependentUpon>Resources.resx</DependentUpon>
+      <DesignTime>True</DesignTime>
     </Compile>
     <EmbeddedResource Include="TestWindow.resx">
       <DependentUpon>TestWindow.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="UX\ChannelView.resx">
       <DependentUpon>ChannelView.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UX\UxMessageBox.resx">
+      <DependentUpon>UxMessageBox.cs</DependentUpon>
     </EmbeddedResource>
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
@@ -117,12 +128,6 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\MFW.LALLib\MFW.LALLib.csproj">
-      <Project>{ad3d807d-37d7-4df9-b667-9dc647541a1b}</Project>
-      <Name>MFW.LALLib</Name>
-    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Assets\Icons\alert.png" />
@@ -145,6 +150,18 @@
     <Resource Include="Assets\Icons\share_mute.png" />
     <Resource Include="Assets\Icons\speaker.png" />
     <Resource Include="Assets\Icons\speaker_mute.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\MFW.LALLib\MFW.LALLib.csproj">
+      <Project>{ad3d807d-37d7-4df9-b667-9dc647541a1b}</Project>
+      <Name>MFW.LALLib</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Assets\Icons\call24.png" />
+    <Resource Include="Assets\Icons\cancel24.png" />
+    <Resource Include="Assets\Icons\hangup24.png" />
+    <Resource Include="Assets\Icons\ok24.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

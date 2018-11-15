@@ -18,6 +18,8 @@ namespace MFW.WF.UX
         private ILog log = LogManager.GetLogger("ChannelView");
         private Channel _channel;
         #endregion
+
+        #region Constructors
         public ChannelView(Channel channel)
         {
             InitializeComponent();
@@ -25,10 +27,25 @@ namespace MFW.WF.UX
             _channel.PropertyChanged += OnPropertyChangedEventHandler;
             this.Disposed += OnDisposed;
         }
+        #endregion
 
+        #region Properties
+        public bool IsShowBar
+        {
+            set
+            {
+                lblName.Visible = !value;
+                pnlBtns.Visible = value;
+                lblChannelName.Visible = value;
+                btnAudio.Visible = value;
+                btnVideo.Visible = value; 
+                PaintView();
+            }
+        }
+        #endregion
         private void OnPropertyChangedEventHandler(object sender, PropertyChangedEventArgs e)
         {
-            switch(e.PropertyName)
+            switch (e.PropertyName)
             {
                 case "ChannelName":
                     {
@@ -41,7 +58,8 @@ namespace MFW.WF.UX
                         btnVideo.Image = _channel.IsVideo ? Properties.Resources.camera : Properties.Resources.camera_mute;
 
                         RenderVedio();
-                    } break;
+                    }
+                    break;
                 case "IsAudio":
                     {
                         btnAudio.Image = _channel.IsAudio ? Properties.Resources.speaker : Properties.Resources.speaker_mute;
@@ -49,14 +67,11 @@ namespace MFW.WF.UX
                     break;
                 case "IsActive":
                     {
-                        lblName.Visible = _channel.IsActive;
-                        pnlBtns.Visible = !_channel.IsActive;
-                        PaintView();
                     }
                     break;
                 case "Size":
                     {
-                     
+
                         PaintView();
                     }
                     break;
@@ -69,30 +84,37 @@ namespace MFW.WF.UX
             this.lblChannelName.Text = _channel.ChannelName;
 
             btnVideo.Image = _channel.IsVideo ? Properties.Resources.camera : Properties.Resources.camera_mute;
-            btnAudio.Image = _channel.IsAudio? Properties.Resources.speaker : Properties.Resources.speaker_mute;
-            lblName.Visible = _channel.IsActive;
-            pnlBtns.Visible = !_channel.IsActive;
+            btnAudio.Image = _channel.IsAudio ? Properties.Resources.speaker : Properties.Resources.speaker_mute;
+
+            this.IsShowBar = !_channel.IsActive;
 
             RenderVedio();
         }
         private void OnDisposed(object sender, EventArgs e)
         {
-            if (_channel.IsLocal)
+            try
             {
-                var isOK = LAL.DetachStreamFromWindow(MediaTypeEnum.PLCM_MF_STREAM_LOCAL, _channel.ChannelID,_channel.Call.CallHandle);
-                if (!isOK)
+                if (_channel.IsLocal)
                 {
-                    MessageBox.Show("本地视频卸载失败");
-                }
+                    var isOK = LAL.DetachStreamFromWindow(MediaTypeEnum.PLCM_MF_STREAM_LOCAL, _channel.ChannelID, _channel.Call.CallHandle);
+                    if (!isOK)
+                    {
+                        MessageBox.Show("本地视频卸载失败");
+                    }
 
-            }
-            else
-            {
-                var isOK = LAL.DetachStreamFromWindow(MediaTypeEnum.PLCM_MF_STREAM_REMOTE, _channel.ChannelID, _channel.Call.CallHandle);
-                if (!isOK)
-                {
-                    MessageBox.Show("远程视频卸载失败");
                 }
+                else
+                {
+                    var isOK = LAL.DetachStreamFromWindow(MediaTypeEnum.PLCM_MF_STREAM_REMOTE, _channel.ChannelID, _channel.Call.CallHandle);
+                    if (!isOK)
+                    {
+                        MessageBox.Show("远程视频卸载失败");
+                    }
+                }
+            }
+            catch(Exception ex)
+            {
+
             }
         }
 
@@ -101,7 +123,7 @@ namespace MFW.WF.UX
             PaintView();
         }
 
-        public void PaintView()
+        private void PaintView()
         {
             var streamWidth = _channel.Size.Item1;
             var streamHeight = _channel.Size.Item2;
@@ -126,7 +148,7 @@ namespace MFW.WF.UX
                 log.Warn("resizeResolutionChange: not normal aspect ratio.");
             }
             var hostWidth = this.Width;
-            var hostHeight = this.Height-(_channel.IsActive?0:40);
+            var hostHeight = this.Height - (_channel.IsActive ? 0 : 40);
             var viewHeight = hostHeight;
             var viewWidth = hostHeight * ratio_w / ratio_h;
 
@@ -138,54 +160,63 @@ namespace MFW.WF.UX
             this.pnlVideo.Width = (int)viewWidth;
             this.pnlVideo.Height = (int)viewHeight;
             var x = (hostWidth - pnlVideo.Width) / 2;
-            var y = (hostHeight - pnlVideo.Height ) / 2;
+            var y = (hostHeight - pnlVideo.Height) / 2;
             this.pnlVideo.Left = x;
-            this.pnlVideo.Top =y;
+            this.pnlVideo.Top = y;
         }
 
 
-        public void RenderVedio()
+        private void RenderVedio()
         {
-            var hwnd = pnlVideo.Handle;
-            if (_channel.IsVideo)
+            /*
+            try
             {
-                if (_channel.IsLocal)
+                var hwnd = pnlVideo.Handle;
+                if (_channel.IsVideo)
                 {
-                    var isOK = LAL.AttachStreamToWindow(hwnd, _channel.Call.CallHandle, MediaTypeEnum.PLCM_MF_STREAM_LOCAL, _channel.ChannelID, this.pnlVideo.Width, this.pnlVideo.Height);
-                    if (!isOK)
+                    if (_channel.IsLocal)
                     {
-                        MessageBox.Show("本地视频附加失败");
+                        var isOK = LAL.AttachStreamToWindow(hwnd, _channel.Call.CallHandle, MediaTypeEnum.PLCM_MF_STREAM_LOCAL, _channel.ChannelID, this.pnlVideo.Width, this.pnlVideo.Height - 40);
+                        if (!isOK)
+                        {
+                            MessageBox.Show("本地视频附加失败");
+                        }
+                    }
+                    else
+                    {
+                        var isOK = LAL.AttachStreamToWindow(hwnd, _channel.Call.CallHandle, MediaTypeEnum.PLCM_MF_STREAM_REMOTE, _channel.ChannelID, this.pnlVideo.Width, this.pnlVideo.Height - 40);
+                        if (!isOK)
+                        {
+                            MessageBox.Show("远程视频附加失败");
+                        }
                     }
                 }
-                else
+                else  //音频
                 {
-                    var isOK = LAL.AttachStreamToWindow(hwnd, _channel.Call.CallHandle, MediaTypeEnum.PLCM_MF_STREAM_REMOTE, _channel.ChannelID, this.pnlVideo.Width, this.pnlVideo.Height);
-                    if (!isOK)
+                    if (_channel.IsLocal)
                     {
-                        MessageBox.Show("远程视频附加失败");
-                    }
-                }
-            }
-            else  //音频
-            {
-                if (_channel.IsLocal)
-                {
-                    var isOK = LAL.DetachStreamFromWindow(MediaTypeEnum.PLCM_MF_STREAM_LOCAL, _channel.ChannelID, _channel.Call.CallHandle);
-                    if (!isOK)
-                    {
-                        MessageBox.Show("本地视频卸载失败");
-                    }
+                        var isOK = LAL.DetachStreamFromWindow(MediaTypeEnum.PLCM_MF_STREAM_LOCAL, _channel.ChannelID, _channel.Call.CallHandle);
+                        if (!isOK)
+                        {
+                            MessageBox.Show("本地视频卸载失败");
+                        }
 
-                }
-                else
-                {
-                    var isOK = LAL.DetachStreamFromWindow(MediaTypeEnum.PLCM_MF_STREAM_REMOTE, _channel.ChannelID, _channel.Call.CallHandle);
-                    if (!isOK)
+                    }
+                    else
                     {
-                        MessageBox.Show("远程视频卸载失败");
+                        var isOK = LAL.DetachStreamFromWindow(MediaTypeEnum.PLCM_MF_STREAM_REMOTE, _channel.ChannelID, _channel.Call.CallHandle);
+                        if (!isOK)
+                        {
+                            MessageBox.Show("远程视频卸载失败");
+                        }
                     }
                 }
             }
+            catch (Exception ex)
+            {
+
+            }
+            */
         }
     }
 }
