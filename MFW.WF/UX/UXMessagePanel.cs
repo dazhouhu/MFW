@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Data;
 using System.Drawing;
+using System.Data;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -10,30 +10,31 @@ using System.Windows.Forms;
 
 namespace MFW.WF.UX
 {
-    public partial class UxMessageBox : Form
+    public partial class UXMessagePanel : UserControl
     {
         #region Constructors
-        public UxMessageBox()
+        public UXMessagePanel()
         {
             InitializeComponent();
         }
         #endregion
 
         #region Properties
-        public Control OwnerCtr { get; set; }
-        public MessageBoxButtonType MessageBoxButtonType
+        public UXMessageMask MessageMask { get; set; }
+        public MessageBoxButtonsType MessageBoxButtonsType
         {
             set
             {
-                switch(value)
+                switch (value)
                 {
-                   case  MessageBoxButtonType.None:{
+                    case MessageBoxButtonsType.None:
+                        {
                             this.btnOK.Visible = false;
                             this.btnCancel.Visible = false;
                             this.btnNo.Visible = false;
                         }
                         break;
-                    case MessageBoxButtonType.OK:
+                    case MessageBoxButtonsType.OK:
                         {
                             this.btnOK.Image = global::MFW.WF.Properties.Resources.ok24;
                             this.btnOK.Left = 115;
@@ -44,7 +45,7 @@ namespace MFW.WF.UX
                             this.btnNo.Visible = false;
                         }
                         break;
-                    case MessageBoxButtonType.OKCancel:
+                    case MessageBoxButtonsType.OKCancel:
                         {
                             this.btnOK.Image = global::MFW.WF.Properties.Resources.ok24;
                             this.btnOK.Left = 30;
@@ -60,7 +61,7 @@ namespace MFW.WF.UX
                             this.btnNo.Visible = false;
                         }
                         break;
-                    case MessageBoxButtonType.YesNo:
+                    case MessageBoxButtonsType.YesNo:
                         {
                             this.btnOK.Image = global::MFW.WF.Properties.Resources.ok24;
                             this.btnOK.Left = 30;
@@ -76,7 +77,7 @@ namespace MFW.WF.UX
                             this.btnCancel.Visible = false;
                         }
                         break;
-                    case MessageBoxButtonType.YesNoCancel:
+                    case MessageBoxButtonsType.YesNoCancel:
                         {
                             this.btnOK.Image = global::MFW.WF.Properties.Resources.ok24;
                             this.btnOK.Left = 10;
@@ -90,12 +91,12 @@ namespace MFW.WF.UX
                             this.btnNo.Visible = true;
 
                             this.btnCancel.Image = global::MFW.WF.Properties.Resources.cancel24;
-                            this.btnCancel.Left =220;
+                            this.btnCancel.Left = 220;
                             this.btnCancel.Text = "取消  ";
                             this.btnCancel.Visible = true;
                         }
                         break;
-                    case MessageBoxButtonType.Answer:
+                    case MessageBoxButtonsType.Answer:
                         {
                             this.btnOK.Image = global::MFW.WF.Properties.Resources.call24;
                             this.btnOK.Left = 115;
@@ -106,7 +107,7 @@ namespace MFW.WF.UX
                             this.btnNo.Visible = false;
                         }
                         break;
-                    case MessageBoxButtonType.Hangup:
+                    case MessageBoxButtonsType.Hangup:
                         {
                             this.btnOK.Image = global::MFW.WF.Properties.Resources.hangup24;
                             this.btnOK.Left = 115;
@@ -117,7 +118,7 @@ namespace MFW.WF.UX
                             this.btnNo.Visible = false;
                         }
                         break;
-                    case MessageBoxButtonType.AnswerHangup:
+                    case MessageBoxButtonsType.AnswerHangup:
                         {
                             this.btnOK.Image = global::MFW.WF.Properties.Resources.call24;
                             this.btnOK.Left = 30;
@@ -139,16 +140,16 @@ namespace MFW.WF.UX
                             this.btnCancel.Visible = false;
                             this.btnNo.Visible = false;
                         }
-                        break;                
+                        break;
                 }
             }
         }
-        
+
         public MessageBoxIcon MessageBoxIcon
         {
             set
             {
-                switch(value)
+                switch (value)
                 {
                     case MessageBoxIcon.None:
                         {
@@ -171,16 +172,19 @@ namespace MFW.WF.UX
                         {
                             msgIcon.Visible = true;
                             msgIcon.Image = Properties.Resources.question;
-                        }break;
+                        }
+                        break;
                     case MessageBoxIcon.Warning:
                         {
                             msgIcon.Visible = true;
                             msgIcon.Image = Properties.Resources.alert;
-                        }break;
+                        }
+                        break;
                     default:
                         {
                             msgIcon.Visible = false;
-                        }break;
+                        }
+                        break;
                 }
             }
         }
@@ -192,7 +196,7 @@ namespace MFW.WF.UX
                 this.lblMsg.Text = value;
             }
         }
-        
+
         #endregion
 
 
@@ -200,49 +204,22 @@ namespace MFW.WF.UX
         public Action OKAction { get; set; }
         private void btnOK_Click(object sender, EventArgs e)
         {
-            this.DialogResult = DialogResult.OK;
             OKAction?.Invoke();
-            if (null != OwnerCtr)
-            {
-                OwnerCtr.Visible = false;
-            }
-            this.Close();
+            this.Dispose();
         }
 
         public Action CancelAction { get; set; }
         private void btnCancel_Click(object sender, EventArgs e)
         {
-            this.DialogResult = DialogResult.Cancel;
             CancelAction?.Invoke();
-            if (null != OwnerCtr)
-            {
-                OwnerCtr.Visible = false;
-            }
-            this.Close();
+            this.Dispose();
         }
         public Action NoAction { get; set; }
         private void btnNo_Click(object sender, EventArgs e)
         {
-            this.DialogResult = DialogResult.No;
             NoAction?.Invoke();
-            if (null != OwnerCtr)
-            {
-                OwnerCtr.Visible = false;
-            }
-            this.Close();
+            this.Dispose();
         }
         #endregion
-    }
-
-    public enum MessageBoxButtonType
-    {
-        None=0,
-        OK ,
-        OKCancel ,
-        YesNo,
-        YesNoCancel ,
-        Answer ,
-        Hangup ,
-        AnswerHangup 
     }
 }

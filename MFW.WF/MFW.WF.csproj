@@ -82,17 +82,23 @@
     <Compile Include="UX\ChannelView.Designer.cs">
       <DependentUpon>ChannelView.cs</DependentUpon>
     </Compile>
-    <Compile Include="UX\UxMessageBox.cs">
-      <SubType>Form</SubType>
+    <Compile Include="UX\UXMessagePanel.cs">
+      <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="UX\UxMessageBox.Designer.cs">
-      <DependentUpon>UxMessageBox.cs</DependentUpon>
+    <Compile Include="UX\UXMessagePanel.Designer.cs">
+      <DependentUpon>UXMessagePanel.cs</DependentUpon>
     </Compile>
     <Compile Include="UX\UXMessageMask.cs">
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="UX\UXMessageMask.Designer.cs">
       <DependentUpon>UXMessageMask.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UX\UXMessageWindow.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="UX\UXMessageWindow.Designer.cs">
+      <DependentUpon>UXMessageWindow.cs</DependentUpon>
     </Compile>
     <EmbeddedResource Include="CallWindow.resx">
       <DependentUpon>CallWindow.cs</DependentUpon>
@@ -119,8 +125,11 @@
     <EmbeddedResource Include="UX\ChannelView.resx">
       <DependentUpon>ChannelView.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="UX\UxMessageBox.resx">
-      <DependentUpon>UxMessageBox.cs</DependentUpon>
+    <EmbeddedResource Include="UX\UXMessagePanel.resx">
+      <DependentUpon>UXMessagePanel.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UX\UXMessageWindow.resx">
+      <DependentUpon>UXMessageWindow.cs</DependentUpon>
     </EmbeddedResource>
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>

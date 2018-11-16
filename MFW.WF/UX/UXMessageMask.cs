@@ -12,14 +12,9 @@ namespace MFW.WF.UX
 {
     public partial class UXMessageMask : Panel
     {
-        private Form win;
-        public UXMessageMask()
+        private UXMessageMask()
         {
             InitializeComponent();
-            this.BackColor = Color.FromArgb(65, 255, 255, 255);
-            this.Dock = DockStyle.Fill;
-            this.Anchor = AnchorStyles.Left | AnchorStyles.Top | AnchorStyles.Right | AnchorStyles.Bottom;
-            this.Visible = false;
         }
 
         protected override void OnPaint(PaintEventArgs pe)
@@ -27,49 +22,88 @@ namespace MFW.WF.UX
             base.OnPaint(pe);
         }
 
-        public void ShowMessage(bool isModal,Form  owner, string msg, MessageBoxButtonType btnType, MessageBoxIcon boxIcon
+        public static void ShowMessage(Form ownerForm,bool isModal,string msg, MessageBoxButtonsType btnType, MessageBoxIcon boxIcon
             , Action okAction = null, Action cancelAction = null, Action noAction = null)
         {
-            if (null != win)
-             {
-                win.Close();
-            }
-            win = new UxMessageBox()
-            {
-                OwnerCtr = this,
-                Message = msg,
-                MessageBoxButtonType = btnType,
-                MessageBoxIcon = boxIcon,
-                OKAction = okAction,
-                CancelAction = cancelAction,
-                NoAction = noAction,
-                Owner = owner
+            HideMessage(ownerForm);
+
+            var msgPnl = new UXMessageMask() {
+                Name = "msgPnl"
             };
-            this.BringToFront();
-            this.Visible = true;
+            ownerForm.Controls.Add(msgPnl);
+
+            msgPnl.BackColor = Color.FromArgb(127, 255, 255,255);
+            msgPnl.Left = 0;
+            msgPnl.Top = 0;
+            msgPnl.Width = ownerForm.Width;
+            msgPnl.Height = ownerForm.Height;
+            msgPnl.Anchor = AnchorStyles.Left | AnchorStyles.Top | AnchorStyles.Right | AnchorStyles.Bottom;
+            msgPnl.BringToFront();
+
             if (isModal)
             {
-                var result = win.ShowDialog();
+                var win = new UXMessageWindow()
+                {
+                    Message = msg,
+                    MessageBoxButtonsType = btnType,
+                    MessageBoxIcon = boxIcon,
+                    OKAction = okAction,
+                    CancelAction = cancelAction,
+                    NoAction = noAction,
+                    Owner = ownerForm
+                };
+                win.FormClosed += (sender, args) => { HideMessage(ownerForm); };
+                win.ShowDialog();                
             }
             else
             {
-                win.Show();
+                var msgBox = new UXMessagePanel()
+                {
+                    Message = msg,
+                    MessageBoxButtonsType = btnType,
+                    MessageBoxIcon = boxIcon,
+                    OKAction = okAction,
+                    CancelAction = cancelAction,
+                    NoAction = noAction
+                };
+                msgPnl.Controls.Add(msgBox);
+                var x = (ownerForm.Width - msgBox.Width) / 2;
+                var y = (ownerForm.Height - msgBox.Height) / 2;
+                msgBox.Location = new Point(x, y);
+                msgBox.Disposed += (obj, args) => { HideMessage(ownerForm); };
             }
         }
 
-        public void HideMessage()
+        public static void HideMessage(Form ownerForm)
         {
-            if (null != win)
+            if (null == ownerForm)
             {
-                win.Close();
+                return;
             }
-            this.Visible = false;
+            if (ownerForm.Controls.ContainsKey("msgPnl"))
+            {
+                ownerForm.Controls.RemoveByKey("msgPnl");
+            }
         }
 
-        public void ShowForm(bool isModal, Form form)
+        public static void ShowForm(Form ownerForm, Panel pnl)
         {
-            this.BringToFront();
-            this.Visible = true;
+            HideMessage(ownerForm);
+
+            var msgPnl = new UXMessageMask()
+            {
+                Name = "msgPnl"
+            };
+            ownerForm.Controls.Add(msgPnl);
+            msgPnl.BringToFront();
+            
+            msgPnl.Controls.Add(pnl);
+            var x = (ownerForm.Width - pnl.Width) / 2;
+            var y = (ownerForm.Height - pnl.Height) / 2;
+            pnl.Location = new Point(x, y);
+            pnl.Disposed += (obj, args) => {
+                HideMessage(ownerForm);
+            };
         }
     }
 }

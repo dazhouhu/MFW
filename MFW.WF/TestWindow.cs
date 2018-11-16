@@ -19,10 +19,6 @@ namespace MFW.WF
 
         private void button1_Click(object sender, EventArgs e)
         {
-            msgPnl.ShowMessage(true, this,"ssss", UX.MessageBoxButtonType.Answer, MessageBoxIcon.Information, () =>
-             {
-                 MessageBox.Show("fdaf");
-             });
         }
     }
 }

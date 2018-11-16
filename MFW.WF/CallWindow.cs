@@ -621,57 +621,6 @@ namespace MFW.WF
                 IsVideo = false
             };
             this._call.AddChannel(localChannel);
-
-            var localChannel1 = new Channel(this._call, 1, false, false)
-            {
-                ChannelName = "视频1",
-                IsAudio = false,
-                IsVideo = false
-            };
-            this._call.AddChannel(localChannel1);
-            var localChannel2 = new Channel(this._call, 2, false, false)
-            {
-                ChannelName = "视频2",
-                IsAudio = false,
-                IsVideo = false
-            };
-            this._call.AddChannel(localChannel2);
-            var localChannel3 = new Channel(this._call, 3, false, false)
-            {
-                ChannelName = "视频3",
-                IsAudio = false,
-                IsVideo = false
-            };
-            this._call.AddChannel(localChannel3);
-            var localChannel4 = new Channel(this._call, 4, false, false)
-            {
-                ChannelName = "视频4",
-                IsAudio = false,
-                IsVideo = false
-            };
-            this._call.AddChannel(localChannel4);
-            var localChannel5 = new Channel(this._call, 5, false, false)
-            {
-                ChannelName = "视频5",
-                IsAudio = false,
-                IsVideo = false
-            };
-            this._call.AddChannel(localChannel5);
-            var localChannel6 = new Channel(this._call, 6, false, false)
-            {
-                ChannelName = "视频6",
-                IsAudio = false,
-                IsVideo = false
-            };
-            this._call.AddChannel(localChannel6);
-
-            var localChannel7 = new Channel(this._call, 7, false, false)
-            {
-                ChannelName = "视频7",
-                IsAudio = false,
-                IsVideo = false
-            };
-            this._call.AddChannel(localChannel7);
         }
         private void btnMic_Click(object sender, EventArgs e)
         {
@@ -705,6 +654,7 @@ namespace MFW.WF
                         msg = "确定要升级为视频通话吗?";
                     }break;
             }
+
             if( MessageBox.Show(this, msg, "确认框", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
             {
                 var callMode = _call.CallMode == CallModeEnum.PLCM_MFW_AUDIO_CALL ? CallModeEnum.PLCM_MFW_AUDIOVIDEO_CALL : CallModeEnum.PLCM_MFW_AUDIO_CALL;
@@ -739,11 +689,13 @@ namespace MFW.WF
             var volume = tbMicVolume.Value;
             if (ErrorNumberEnum.PLCM_SAMPLE_OK != WrapperProxy.SetMicVolume(volume))
             {
-                if(MessageBox.Show(this,"设置麦克风音量失败!","消息框", MessageBoxButtons.OK, MessageBoxIcon.Error)== DialogResult.OK)
+                Action okAction = () =>
                 {
-                    volume=WrapperProxy.GetMicVolume();
+                    volume = WrapperProxy.GetMicVolume();
                     this.tbMicVolume.Value = volume;
-                }
+                };
+                UXMessageMask.ShowMessage(this, false, "设置麦克风音量失败!", MessageBoxButtonsType.OK, MessageBoxIcon.Error
+                                            , okAction);
             }
             if(volume==0)
             {
@@ -813,27 +765,30 @@ namespace MFW.WF
                         deviceManager.PlaySound(DeviceManager.IncomingSound, true, 2000);
 
                         var msg= string.Format("【{0}】呼入中，是否接听？", this._call.RemoteDisplayName);
-                        if (MessageBox.Show(this,msg, "确认框", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
-                        {
+                        Action answerAction = () => {
                             LAL.Hold(true);
                             LAL.Hangup(true);
                             deviceManager.StopSound();
                             LAL.Answer(this._call, CallModeEnum.PLCM_MFW_AUDIOVIDEO_CALL, true);
-                        }
-                        else
+                        };
+                        Action hangupAction = () =>
                         {
                             LAL.Hangup(this._call);
-                        }
+                        };
+                        UXMessageMask.ShowMessage(this, false, msg, MessageBoxButtonsType.AnswerHangup, MessageBoxIcon.Question
+                                                    , answerAction,hangupAction);
                     }
                     break;
                 case CallEventStateEnum.INCOMING_CLOSED:                    /* UAS received the call terminated. */
                     {
                         deviceManager.StopSound();
                         deviceManager.PlaySound(DeviceManager.ClosedSound, false, 0);
-                        if (MessageBox.Show(this, "呼叫已经关闭!", "消息框", MessageBoxButtons.OK, MessageBoxIcon.Error) == DialogResult.OK)
+                        Action okAction = () =>
                         {
                             this.Close();
-                        }
+                        };
+                        UXMessageMask.ShowMessage(this, false, "呼叫已经关闭!", MessageBoxButtonsType.OK, MessageBoxIcon.Information
+                                                    , okAction);
                     }
                     break;
                 case CallEventStateEnum.INCOMING_CONNECTED:                 /* UAS received the call connected. */
@@ -874,21 +829,24 @@ namespace MFW.WF
                         deviceManager.StopSound();
                         deviceManager.PlaySound(DeviceManager.RingingSound, true, 2000);
 
-                        /*
-                        if (MessageBox.Show(this, "当前正呼叫中，确认要挂断吗？", "确认框", MessageBoxButtons.OKCancel, MessageBoxIcon.Error) == DialogResult.OK)
+                        Action hangupAction = () =>
                         {
-                            LAL.Hangup(this._call);
-                        }
-                        */
+                            this.Close();
+                        };
+                        UXMessageMask.ShowMessage(this, false, "当前正呼叫中...", MessageBoxButtonsType.Hangup, MessageBoxIcon.Information
+                                                    , hangupAction);
                     }
                     break;
                 case CallEventStateEnum.OUTGOING_FAILURE:               /* from CC */
                     {
                         deviceManager.StopSound();
-                        if (MessageBox.Show(this, "呼叫失敗!", "消息框", MessageBoxButtons.OK, MessageBoxIcon.Error) == DialogResult.OK)
+
+                        Action okAction = () =>
                         {
                             this.Close();
-                        }
+                        };
+                        UXMessageMask.ShowMessage(this, false, "呼叫失敗!", MessageBoxButtonsType.OK, MessageBoxIcon.Error
+                                                    , okAction);
                     }
                     break;
                 case CallEventStateEnum.OUTGOING_CONNECTED:             /* from CC */
@@ -930,17 +888,12 @@ namespace MFW.WF
                     break;
                 case CallEventStateEnum.SIP_CALL_TRYING:
                     {
-                        /*
                         deviceManager.StopSound();
                         deviceManager.PlaySound(DeviceManager.RingingSound, true, 2000);
 
-                        var msg = string.Format("呼叫 【{0}】 中...", this._call.DisplayCallName);
-
-                        if(MessageBox.Show(this,msg,"消息框", MessageBoxButtons.OK, MessageBoxIcon.Information)== DialogResult.OK)
-                        {
-                            LAL.Hangup(this._call);
-                        }
-                        */
+                        Action hangupAction = () => { LAL.Hangup(this._call); };
+                        UXMessageMask.ShowMessage(this, false, "呼叫 【{0}】 中...", MessageBoxButtonsType.Hangup, MessageBoxIcon.Information
+                                                    , hangupAction);
                     }
                     break;
             }

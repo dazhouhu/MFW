@@ -1,8 +1,8 @@
 ﻿namespace MFW.WF.UX
 {
-    partial class UxMessageBox
+    partial class UXMessageWindow
     {
-        /// <summary>
+         /// <summary>
         /// Required designer variable.
         /// </summary>
         private System.ComponentModel.IContainer components = null;
@@ -40,11 +40,11 @@
             // 
             this.lblMsg.AutoSize = true;
             this.lblMsg.Font = new System.Drawing.Font("宋体", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.lblMsg.ForeColor = System.Drawing.SystemColors.ControlText;
             this.lblMsg.Location = new System.Drawing.Point(84, 48);
             this.lblMsg.Name = "lblMsg";
-            this.lblMsg.Size = new System.Drawing.Size(62, 16);
+            this.lblMsg.Size = new System.Drawing.Size(0, 16);
             this.lblMsg.TabIndex = 2;
-            this.lblMsg.Text = "";
             // 
             // msgIcon
             // 
@@ -109,7 +109,7 @@
             this.btnNo.Visible = false;
             this.btnNo.Click += new System.EventHandler(this.btnNo_Click);
             // 
-            // UxMessageBox
+            // UXMessageWindow
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
@@ -120,7 +120,7 @@
             this.Controls.Add(this.btnCancel);
             this.Controls.Add(this.btnOK);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
-            this.Name = "UxMessageBox";
+            this.Name = "UXMessageWindow";
             this.Opacity = 0.6D;
             this.ShowInTaskbar = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
