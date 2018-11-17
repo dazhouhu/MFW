@@ -51,6 +51,19 @@ namespace MFW.WF
                 }
             }
         }
+        private bool _muteCamera = true;
+        public bool MuteCamera
+        {
+            get { return _muteCamera; }
+            set
+            {
+                if(_muteCamera != value)
+                {
+                    _muteCamera = value;
+                    btnCamera.Image = _muteCamera?Properties.Resources.camera_mute: Properties.Resources.camera;
+                }
+            }
+        }
         #endregion
 
 
@@ -74,16 +87,17 @@ namespace MFW.WF
                             this.btnShare.Image = Properties.Resources.share_mute;
                         }
                         else
-                        {
-                            btnCamera.Enabled = true;
+                        {                            
                             if (_call.IsAudioOnly)
                             {
+                                btnCamera.Enabled = false; 
                                 btnCamera.Image = Properties.Resources.camera_mute;
                                 this.btnShare.Enabled = false;
                                 this.btnShare.Image = Properties.Resources.share_mute;
                             }
                             else
                             {
+                                btnCamera.Enabled = true;
                                 btnCamera.Image = Properties.Resources.camera;
                                 if (_call.IsContentSupported)
                                 {
@@ -621,6 +635,9 @@ namespace MFW.WF
                 IsVideo = false
             };
             this._call.AddChannel(localChannel);
+
+            _muteCamera = true;
+            btnCamera.Image = Properties.Resources.camera_mute;
         }
         private void btnMic_Click(object sender, EventArgs e)
         {
@@ -642,26 +659,27 @@ namespace MFW.WF
 
         private void btnCamera_Click(object sender, EventArgs e)
         {
-            var msg = string.Empty;
-            switch (_call.CallMode)
+            if(true==MuteCamera)
             {
-                case CallModeEnum.PLCM_MFW_AUDIOVIDEO_CALL:
-                    {
-                        msg = "确定要降级为语音通话吗?";
-                    }break;
-                case CallModeEnum.PLCM_MFW_AUDIO_CALL:
-                    {
-                        msg = "确定要升级为视频通话吗?";
-                    }break;
-            }
-
-            if( MessageBox.Show(this, msg, "确认框", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
-            {
-                var callMode = _call.CallMode == CallModeEnum.PLCM_MFW_AUDIO_CALL ? CallModeEnum.PLCM_MFW_AUDIOVIDEO_CALL : CallModeEnum.PLCM_MFW_AUDIO_CALL;
-                if(ErrorNumberEnum.PLCM_SAMPLE_OK != WrapperProxy.ChangeCallMode(_call.CallHandle, CallModeEnum.PLCM_MFW_AUDIO_CALL))
+                if (ErrorNumberEnum.PLCM_SAMPLE_OK == WrapperProxy.StartCamera())
                 {
-                    MessageBox.Show(this, "处理失败!","消息框", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                }               
+                    MuteCamera = false;
+                }
+                else
+                {
+                    UXMessageMask.ShowMessage(this, false, "启动摄像头失败！", MessageBoxButtonsType.OK, MessageBoxIcon.Error);
+                }
+            }
+            else
+            {
+                if (ErrorNumberEnum.PLCM_SAMPLE_OK == WrapperProxy.StopCamera())
+                {
+                    MuteCamera = true;
+                }
+                else
+                {
+                    UXMessageMask.ShowMessage(this, false, "关闭摄像头失败！", MessageBoxButtonsType.OK, MessageBoxIcon.Error);
+                }
             }
         }
 
@@ -719,6 +737,20 @@ namespace MFW.WF
         private void tbMicVolume_ValueChanged(object sender, EventArgs e)
         {
             var volume = tbMicVolume.Value;
+            if(0== volume)
+            {
+                if(ErrorNumberEnum.PLCM_SAMPLE_OK== WrapperProxy.MuteMic(_call.CallHandle, true))
+                {
+                    this.btnMic.Image = Properties.Resources.mic_mute;
+                }
+            }
+            else
+            {
+                if (ErrorNumberEnum.PLCM_SAMPLE_OK == WrapperProxy.MuteMic(_call.CallHandle, false))
+                {
+                    this.btnMic.Image = Properties.Resources.mic;
+                }
+            }
             if (ErrorNumberEnum.PLCM_SAMPLE_OK != WrapperProxy.SetMicVolume(volume))
             {
                 Action okAction = () =>
@@ -729,19 +761,25 @@ namespace MFW.WF
                 UXMessageMask.ShowMessage(this, false, "设置麦克风音量失败!", MessageBoxButtonsType.OK, MessageBoxIcon.Error
                                             , okAction);
             }
-            if(volume==0)
-            {
-                this.btnMic.Image = Properties.Resources.mic_mute;
-            }
-            else
-            {
-                this.btnMic.Image = Properties.Resources.mic;
-            }
         }
 
         private void tbSpeakerVolume_ValueChanged(object sender, EventArgs e)
         {
             var volume = tbSpeakerVolume.Value;
+            if (0 == volume)
+            {
+                if (ErrorNumberEnum.PLCM_SAMPLE_OK == WrapperProxy.MuteSpeaker( true))
+                {
+                    this.btnSpeaker.Image = Properties.Resources.speaker_mute;
+                }
+            }
+            else
+            {
+                if (ErrorNumberEnum.PLCM_SAMPLE_OK == WrapperProxy.MuteSpeaker(false))
+                {
+                    this.btnSpeaker.Image = Properties.Resources.speaker;
+                }
+            }
             if (ErrorNumberEnum.PLCM_SAMPLE_OK != WrapperProxy.SetSpeakerVolume(volume))
             {
                 if (MessageBox.Show(this, "设置麦克风音量失败!", "消息框", MessageBoxButtons.OK, MessageBoxIcon.Error) == DialogResult.OK)
@@ -750,22 +788,16 @@ namespace MFW.WF
                     this.tbSpeakerVolume.Value = volume;
                 }
             }
-            if (volume == 0)
-            {
-                this.btnSpeaker.Image = Properties.Resources.speaker_mute;
-            }
-            else
-            {
-                this.btnSpeaker.Image = Properties.Resources.speaker;
-            }
         }
         private void CallWindow_FormClosing(object sender, FormClosingEventArgs e)
         {
+            bool canDirectClose = false;
             switch(_call.CallState)
             {
                 case CallStateEnum.SIP_UNKNOWN:
                 case CallStateEnum.SIP_CALL_CLOSED:
                 case CallStateEnum.NULL_CALL:
+                    canDirectClose = true;
                     break;
                 case CallStateEnum.SIP_INCOMING_INVITE:
                 case CallStateEnum.SIP_INCOMING_CONNECTED:
@@ -775,7 +807,21 @@ namespace MFW.WF
                 case CallStateEnum.SIP_OUTGOING_TRYING:
                 case CallStateEnum.SIP_OUTGOING_RINGING:
                 case CallStateEnum.SIP_OUTGOING_CONNECTED:
+                    canDirectClose = false;
                     break;
+            }
+            if(!canDirectClose)
+            {
+                Action okAction = () => {
+                    LAL.Hangup(_call);
+                    e.Cancel = false;
+                };
+                Action cancelAction = () =>
+                {
+                    e.Cancel = true;
+                };
+                UXMessageMask.ShowMessage(this, true, "当前通话连通中.\r\n确认要关闭退出吗？", MessageBoxButtonsType.OKCancel, MessageBoxIcon.Question
+                                        , okAction, cancelAction);
             }
         }
 
@@ -826,6 +872,8 @@ namespace MFW.WF
                 case CallEventStateEnum.INCOMING_CONNECTED:                 /* UAS received the call connected. */
                     {
                         deviceManager.StopSound();
+                        ViewRender();
+                        UXMessageMask.HideMessage(this);
                     }
                     break;
                 case CallEventStateEnum.INCOMING_HOLD: break;                      /* The call is holding by local site. */
@@ -885,6 +933,7 @@ namespace MFW.WF
                     {
                         deviceManager.StopSound();
                         ViewRender();
+                        UXMessageMask.HideMessage(this);
                     }
                     break;
 
@@ -924,7 +973,7 @@ namespace MFW.WF
                         deviceManager.PlaySound(DeviceManager.RingingSound, true, 2000);
 
                         Action hangupAction = () => { LAL.Hangup(this._call); };
-                        UXMessageMask.ShowMessage(this, false, "呼叫 【{0}】 中...", MessageBoxButtonsType.Hangup, MessageBoxIcon.Information
+                        UXMessageMask.ShowMessage(this, false, "呼叫中...", MessageBoxButtonsType.Hangup, MessageBoxIcon.Information
                                                     , hangupAction);
                     }
                     break;

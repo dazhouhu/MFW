@@ -51,6 +51,7 @@
             this.msgIcon.Location = new System.Drawing.Point(19, 29);
             this.msgIcon.Name = "msgIcon";
             this.msgIcon.Size = new System.Drawing.Size(48, 48);
+            this.msgIcon.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
             this.msgIcon.TabIndex = 6;
             this.msgIcon.TabStop = false;
             // 
@@ -108,7 +109,7 @@
             this.btnOK.Visible = false;
             this.btnOK.Click += new System.EventHandler(this.btnOK_Click);
             // 
-            // MessageBoxPanel
+            // UXMessagePanel
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
@@ -117,7 +118,7 @@
             this.Controls.Add(this.btnNo);
             this.Controls.Add(this.btnCancel);
             this.Controls.Add(this.btnOK);
-            this.Name = "MessageBoxPanel";
+            this.Name = "UXMessagePanel";
             this.Size = new System.Drawing.Size(320, 204);
             ((System.ComponentModel.ISupportInitialize)(this.msgIcon)).EndInit();
             this.ResumeLayout(false);
