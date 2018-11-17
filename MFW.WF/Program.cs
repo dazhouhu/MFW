@@ -16,8 +16,8 @@ namespace MFW.WF
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            // Application.Run(new TestWindow());
-           //  return;
+           //  Application.Run(new TestWindow());
+            // return;
             //Application.Run(new CallWindow(new LALLib.Call(11)));
             //return;
 

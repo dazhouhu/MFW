@@ -52,6 +52,7 @@
             this.msgIcon.Location = new System.Drawing.Point(21, 35);
             this.msgIcon.Name = "msgIcon";
             this.msgIcon.Size = new System.Drawing.Size(48, 48);
+            this.msgIcon.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
             this.msgIcon.TabIndex = 1;
             this.msgIcon.TabStop = false;
             // 

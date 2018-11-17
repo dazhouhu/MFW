@@ -37,6 +37,8 @@
             this.dasfdsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.contextMenuStrip2 = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.panel1 = new System.Windows.Forms.Panel();
+            this.panel2 = new System.Windows.Forms.Panel();
+            this.panel3 = new System.Windows.Forms.Panel();
             ((System.ComponentModel.ISupportInitialize)(this.trackBar1)).BeginInit();
             this.contextMenuStrip1.SuspendLayout();
             this.panel1.SuspendLayout();
@@ -101,13 +103,31 @@
             this.panel1.Name = "panel1";
             this.panel1.Size = new System.Drawing.Size(200, 120);
             this.panel1.TabIndex = 4;
-
+            // 
+            // panel2
+            // 
+            this.panel2.BackColor = System.Drawing.Color.Red;
+            this.panel2.Location = new System.Drawing.Point(306, 13);
+            this.panel2.Name = "panel2";
+            this.panel2.Size = new System.Drawing.Size(438, 419);
+            this.panel2.TabIndex = 5;
+            // 
+            // panel3
+            // 
+            this.panel3.BackColor = System.Drawing.Color.White;
+            this.panel3.Location = new System.Drawing.Point(140, 62);
+            this.panel3.Name = "panel3";
+            this.panel3.Size = new System.Drawing.Size(483, 396);
+            this.panel3.TabIndex = 6;
             // 
             // TestWindow
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.BackColor = System.Drawing.SystemColors.ActiveCaption;
             this.ClientSize = new System.Drawing.Size(822, 470);
+            this.Controls.Add(this.panel3);
+            this.Controls.Add(this.panel2);
             this.Controls.Add(this.panel1);
             this.Controls.Add(this.button1);
             this.Name = "TestWindow";
@@ -131,5 +151,7 @@
         private System.Windows.Forms.ToolStripMenuItem dasfdsToolStripMenuItem;
         private System.Windows.Forms.Panel panel1;
         private UX.UXMessageMask msgPnl;
+        private System.Windows.Forms.Panel panel2;
+        private System.Windows.Forms.Panel panel3;
     }
 }

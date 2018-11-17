@@ -168,7 +168,6 @@ namespace MFW.WF.UX
 
         private void RenderVedio()
         {
-            /*
             try
             {
                 var hwnd = pnlVideo.Handle;
@@ -216,7 +215,6 @@ namespace MFW.WF.UX
             {
 
             }
-            */
         }
     }
 }

@@ -15,10 +15,20 @@ namespace MFW.WF.UX
         private UXMessageMask()
         {
             InitializeComponent();
+            SetStyle(ControlStyles.Opaque | ControlStyles.AllPaintingInWmPaint | ControlStyles.UserPaint, true);
         }
 
         protected override void OnPaint(PaintEventArgs pe)
         {
+            Color drawColor = Color.FromArgb(127, this.BackColor);
+            //// 定义画笔
+            Pen labelBorderPen = new Pen(drawColor, 0);
+            SolidBrush labelBackColorBrush = new SolidBrush(drawColor);
+            //// 绘制背景色
+            pe.Graphics.DrawRectangle(labelBorderPen, 0, 0, Size.Width, Size.Height);
+            pe.Graphics.FillRectangle(labelBackColorBrush, 0, 0, Size.Width, Size.Height);
+            
+
             base.OnPaint(pe);
         }
 
@@ -31,8 +41,6 @@ namespace MFW.WF.UX
                 Name = "msgPnl"
             };
             ownerForm.Controls.Add(msgPnl);
-
-            msgPnl.BackColor = Color.FromArgb(127, 255, 255,255);
             msgPnl.Left = 0;
             msgPnl.Top = 0;
             msgPnl.Width = ownerForm.Width;
