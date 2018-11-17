@@ -667,6 +667,38 @@ namespace MFW.WF
 
         private void btnShare_Click(object sender, EventArgs e)
         {
+            var contentSelectWin = new ContentSelectPanel() {
+                Monitors = deviceManager.GetDevicesByType(DeviceTypeEnum.DEV_MONITOR),
+                Apps = deviceManager.GetDevicesByType(DeviceTypeEnum.APPLICATIONS),
+                OKAction = (type,format,monitor,app) => {
+                    switch (type)
+                    {
+                        case "Monitor":
+                            {
+                                var errno = WrapperProxy.StartShareContent(_call.CallHandle, monitor, app);
+                                if (errno != ErrorNumberEnum.PLCM_SAMPLE_OK)
+                                {
+                                    MessageBox.Show(this, "共享内容失败！", "消息框", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                                    return false;
+                                }
+                            }
+                            break;
+                        case "BFCP":
+                            {
+                                var errno = WrapperProxy.StartBFCPContent(_call.CallHandle);
+                                if (errno != ErrorNumberEnum.PLCM_SAMPLE_OK)
+                                {
+                                    MessageBox.Show(this, "共享内容失败！", "消息框", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                                    return false;
+                                }
+                            }
+                            break;
+                    }
+                    return true;
+                },
+                OnCancel = ()=>{ }
+            };
+            UXMessageMask.ShowForm(this, contentSelectWin);
             MessageBox.Show(this, "实现中", "消息框", MessageBoxButtons.OK, MessageBoxIcon.Error);
         }
 

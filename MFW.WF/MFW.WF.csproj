@@ -82,6 +82,12 @@
     <Compile Include="UX\ChannelView.Designer.cs">
       <DependentUpon>ChannelView.cs</DependentUpon>
     </Compile>
+    <Compile Include="UX\ContentSelectPanel.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="UX\ContentSelectPanel.Designer.cs">
+      <DependentUpon>ContentSelectPanel.cs</DependentUpon>
+    </Compile>
     <Compile Include="UX\UXMessagePanel.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -124,6 +130,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="UX\ChannelView.resx">
       <DependentUpon>ChannelView.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UX\ContentSelectPanel.resx">
+      <DependentUpon>ContentSelectPanel.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="UX\UXMessagePanel.resx">
       <DependentUpon>UXMessagePanel.cs</DependentUpon>

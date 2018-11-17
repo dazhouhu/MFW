@@ -132,7 +132,7 @@ namespace MFW.LALLib
             return (ErrorNumberEnum)WrapperInterface.updateConfig();
         }
 
-        public static ErrorNumberEnum StartShareContent(int callhandle, string deviceHandle, IntPtr appWndHandle)
+        public static ErrorNumberEnum StartShareContent(int callhandle, string deviceHandle, string appWndHandle)
         {
             return (ErrorNumberEnum)WrapperInterface.startShareContent(callhandle, deviceHandle, appWndHandle);
         }

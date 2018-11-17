@@ -86,7 +86,7 @@ namespace MFW.WF.UX
             }
         }
 
-        public static void ShowForm(Form ownerForm, Panel pnl)
+        public static void ShowForm(Form ownerForm, Control pnl)
         {
             HideMessage(ownerForm);
 
