@@ -628,7 +628,7 @@ namespace MFW.WF
             }
             #endregion
 
-            var localChannel = new Channel(this._call, 0, true, false)
+            var localChannel = new Channel(this._call, 0, ChannelType.Local, false)
             {
                 ChannelName = "本地视频",
                 IsAudio = false,
@@ -638,6 +638,9 @@ namespace MFW.WF
 
             _muteCamera = true;
             btnCamera.Image = Properties.Resources.camera_mute;
+
+
+            WrapperProxy.GetApplicationInfo();
         }
         private void btnMic_Click(object sender, EventArgs e)
         {
@@ -685,6 +688,7 @@ namespace MFW.WF
 
         private void btnShare_Click(object sender, EventArgs e)
         {
+
             var contentSelectWin = new ContentSelectPanel() {
                 Monitors = deviceManager.GetDevicesByType(DeviceTypeEnum.DEV_MONITOR),
                 Apps = deviceManager.GetDevicesByType(DeviceTypeEnum.APPLICATIONS),
@@ -703,6 +707,9 @@ namespace MFW.WF
                             break;
                         case "BFCP":
                             {
+                                var width = Screen.PrimaryScreen.Bounds.Width;
+                                var height = Screen.PrimaryScreen.Bounds.Height;
+                                WrapperProxy.SetContentBuffer(format, width, height);
                                 var errno = WrapperProxy.StartBFCPContent(_call.CallHandle);
                                 if (errno != ErrorNumberEnum.PLCM_SAMPLE_OK)
                                 {
@@ -717,7 +724,6 @@ namespace MFW.WF
                 OnCancel = ()=>{ }
             };
             UXMessageMask.ShowForm(this, contentSelectWin);
-            MessageBox.Show(this, "实现中", "消息框", MessageBoxButtons.OK, MessageBoxIcon.Error);
         }
 
         private void btnAttender_Click(object sender, EventArgs e)
@@ -890,14 +896,20 @@ namespace MFW.WF
                     }
                     break;
                 case CallEventStateEnum.INCOMING_CONTENT:
-                    break;
-                    {
-                        //  LAL.attachStreamToWindow(pnl.getContentWindow(), LAL.getActiveCall().getCallHandle(), MediaType.PLCM_MF_STREAM_CONTENT, 0, 0, 0);
+                    {                  
                     }
                     break;
-                case CallEventStateEnum.CONTENT_SENDING: break;
+                case CallEventStateEnum.CONTENT_SENDING:
+                    {
+                        log.Info("CONTENT_SENDING");
+                    } break;
                 case CallEventStateEnum.CONTENT_CLOSED:
                     {
+                        var contentChannel = _call.Channels.FirstOrDefault(c => c.ChannelType == ChannelType.Content);
+                        if (null != contentChannel)
+                        {
+                            this._call.RemoveChannel(contentChannel.ChannelID);
+                        }
                         // LAL.detachStreamFromWindow(MediaType.PLCM_MF_STREAM_CONTENT, 0, LAL.getActiveCall().getCallHandle()); /*detach content window*/
                     }
                     break;

@@ -40,12 +40,12 @@ namespace MFW.WF.UX
             var msgPnl = new UXMessageMask() {
                 Name = "msgPnl"
             };
-            ownerForm.Controls.Add(msgPnl);
             msgPnl.Left = 0;
             msgPnl.Top = 0;
             msgPnl.Width = ownerForm.Width;
             msgPnl.Height = ownerForm.Height;
             msgPnl.Anchor = AnchorStyles.Left | AnchorStyles.Top | AnchorStyles.Right | AnchorStyles.Bottom;
+            ownerForm.Controls.Add(msgPnl);
             msgPnl.BringToFront();
 
             if (isModal)
@@ -74,11 +74,11 @@ namespace MFW.WF.UX
                     CancelAction = cancelAction,
                     NoAction = noAction
                 };
-                msgPnl.Controls.Add(msgBox);
                 var x = (ownerForm.Width - msgBox.Width) / 2;
                 var y = (ownerForm.Height - msgBox.Height) / 2;
                 msgBox.Location = new Point(x, y);
                 msgBox.Disposed += (obj, args) => { HideMessage(ownerForm); };
+                msgPnl.Controls.Add(msgBox);
             }
         }
 
@@ -102,13 +102,18 @@ namespace MFW.WF.UX
             {
                 Name = "msgPnl"
             };
+            msgPnl.Left = 0;
+            msgPnl.Top = 0;
+            msgPnl.Width = ownerForm.Width;
+            msgPnl.Height = ownerForm.Height;
+            msgPnl.Anchor = AnchorStyles.Left | AnchorStyles.Top | AnchorStyles.Right | AnchorStyles.Bottom;
             ownerForm.Controls.Add(msgPnl);
             msgPnl.BringToFront();
             
-            msgPnl.Controls.Add(pnl);
             var x = (ownerForm.Width - pnl.Width) / 2;
             var y = (ownerForm.Height - pnl.Height) / 2;
             pnl.Location = new Point(x, y);
+            msgPnl.Controls.Add(pnl);
             pnl.Disposed += (obj, args) => {
                 HideMessage(ownerForm);
             };

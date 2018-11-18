@@ -160,10 +160,7 @@ namespace MFW.WF
                         }
                     } break;
                 case EventTypeEnum.PLCM_MFW_SIP_REGISTER_UNREGISTERED: {
-                        if (MessageBox.Show(this, "注册失效!", "消息通知", MessageBoxButtons.OK, MessageBoxIcon.Error) == DialogResult.OK)
-                        {
-                            Application.Exit();
-                        }
+                        
                     } break;
                 
                 case EventTypeEnum.DEVICE_VIDEOINPUTCHANGED:break;   /* from MP */

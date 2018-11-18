@@ -31,12 +31,17 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="EntityFramework, Version=5.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <HintPath>..\packages\EntityFramework.5.0.0\lib\net45\EntityFramework.dll</HintPath>
+    </Reference>
     <Reference Include="log4net">
       <HintPath>..\Lib\log4net.dll</HintPath>
     </Reference>
     <Reference Include="System" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.configuration" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Data.Entity" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
@@ -50,11 +55,13 @@
     <Compile Include="ConfigurationManager.cs" />
     <Compile Include="DeviceManager.cs" />
     <Compile Include="Enums\AutoDiscoveryStatusEnum.cs" />
+    <Compile Include="Enums\BFCPFormatEnum.cs" />
     <Compile Include="Enums\CallEventStateEnum.cs" />
     <Compile Include="Enums\CallModeEnum.cs" />
     <Compile Include="Enums\CallStateEnum.cs" />
     <Compile Include="Enums\CallStreamTypeEnum.cs" />
     <Compile Include="Enums\CertChoiceEnum.cs" />
+    <Compile Include="Enums\ChannelType.cs" />
     <Compile Include="Enums\DeviceTypeEnum.cs" />
     <Compile Include="Enums\DTMFKeyEnum.cs" />
     <Compile Include="Enums\ErrorNumberEnum.cs" />
@@ -83,7 +90,10 @@
     <Compile Include="WrapperInterface.cs" />
     <Compile Include="WrapperProxy.cs" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <None Include="App.config" />
+    <None Include="packages.config" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

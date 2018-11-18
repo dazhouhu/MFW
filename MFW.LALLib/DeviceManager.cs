@@ -185,7 +185,11 @@ namespace MFW.LALLib
         #region Apps
         public void AddApp(Device app)
         {
-            applications.Add(app.DeviceName, app);
+            if (!applications.ContainsKey(app.DeviceName))
+            {
+                applications.Add(app.DeviceName, app);
+                devices.Add(app);
+            }
         }
         public Device GetApp(string appName)
         {

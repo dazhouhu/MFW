@@ -235,7 +235,7 @@ namespace MFW.LALLib
          * <ref>PLCM_Wrapper_Errno startShareContent(int callhandle, PLCM_MFW_DeviceHandle deviceHandle,PLCM_MFW_Wnd wnd);</ref>
 	     * */
         [DllImport("wrapper.dll", CallingConvention = CallingConvention.Cdecl)]
-        public static extern int startShareContent(int callhandle, string deviceHandle, string appWndHandle);
+        public static extern int startShareContent(int callhandle, string deviceHandle, IntPtr appWndHandle);
 
         /**
 	     * start to BFCP content

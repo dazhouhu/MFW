@@ -124,12 +124,12 @@ namespace MFW.LALLib
         {
             return _channels.FirstOrDefault(c=>c.ChannelID==channelID);
         }
-        public void AddChannel(int channelID)
+        public void AddChannel(int channelID,ChannelType channelType)
         {
             if(null == GetChannel(channelID))
             {
                 var isActive = channelID == ActiveSpeakerId;
-                var channel = new Channel(this,channelID, false, isActive);
+                var channel = new Channel(this,channelID, channelType, isActive);
                 _channels.Add(channel);
                 if (isActive)
                 {
@@ -163,7 +163,7 @@ namespace MFW.LALLib
         }
         public void ClearRemoteChannels()
         {
-            var channels = _channels.Where(c => !c.IsLocal).ToList();
+            var channels = _channels.Where(c => c.ChannelType== ChannelType.Remote).ToList();
             foreach (var c in channels)
             {
                 _channels.Remove(c);

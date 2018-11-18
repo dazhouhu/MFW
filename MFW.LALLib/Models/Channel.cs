@@ -13,18 +13,18 @@ namespace MFW.LALLib
             this._call = call;
 
         }
-        public Channel(Call call,int id ,bool isLocal,bool isActive=false) {
+        public Channel(Call call,int id ,ChannelType channelType,bool isActive=false) {
             this._call = call;
             this.ChannelID = id;
-            this.IsLocal = isLocal;
+            this._channelType = channelType;
             this.IsActive = isActive;
         }
-        public Channel(Call call, int id,string name,bool isLocal,bool isActive=false)
+        public Channel(Call call, int id,string name, ChannelType channelType, bool isActive=false)
         {
             this._call = call;
             this.ChannelID = id;
             this.ChannelName = name;
-            this.IsLocal = isLocal;
+            this._channelType = channelType;
             this.IsActive = isActive;
         }
         #endregion
@@ -102,17 +102,14 @@ namespace MFW.LALLib
         }
         #endregion
 
-        #region IsLocal
-        private bool _isLocal;
-        public bool IsLocal
+        #region ChannelType
+        private ChannelType _channelType;
+        public ChannelType ChannelType
         {
-            get { return _isLocal; }
-            set {
-                _isLocal = value;
-                NotifyPropertyChanged("IsLocal");
-            }
+            get { return _channelType; }
         }
         #endregion
+
 
         #region Size
         private Tuple<int, int> _size = new Tuple<int, int>(400, 300);

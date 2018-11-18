@@ -24,7 +24,10 @@ namespace MFW.WF.UX
             set
             {
                 cbxMonitor.DataSource = value;
-                cbxMonitor.SelectedIndex = 0;
+                if (value.Count > 0)
+                {
+                    cbxMonitor.SelectedIndex = 0;
+                }
             }
         }
         public IList<Device> Apps
@@ -32,7 +35,10 @@ namespace MFW.WF.UX
             set
             {
                 cbxApp.DataSource = value;
-                cbxApp.SelectedIndex = 0;
+                if (value.Count > 0)
+                {
+                    cbxApp.SelectedIndex = 0;
+                }
             }
         }
 
@@ -58,17 +64,32 @@ namespace MFW.WF.UX
             }
             else
             {
-                cbxFormat.Enabled = true;
+                cbxFormat.Enabled = false;
             }
         }
 
-        public Func<string,string,string,string,bool> OKAction { get; set; }
+        public Func<string, BFCPFormatEnum, string,IntPtr,bool> OKAction { get; set; }
         private void btnOK_Click(object sender, EventArgs e)
         {
             if(null != OKAction)
             {
                 var type = rdMonitor.Checked ? "Monitor" : "BFCP";
-                var result = OKAction(type,cbxFormat.SelectedValue.ToString(),cbxMonitor.SelectedValue.ToString(),cbxApp.SelectedValue.ToString());
+                var format = BFCPFormatEnum.PLCM_MFW_IMAGE_FORMAT_YV12;
+                if (cbxFormat.SelectedIndex >= 0)
+                {
+                    format = (BFCPFormatEnum)cbxFormat.SelectedIndex;
+                }
+                string monitor = null;
+                if(cbxMonitor.SelectedIndex >= 0)
+                {
+                    monitor = cbxMonitor.SelectedValue.ToString();
+                }
+                IntPtr app = IntPtr.Zero;
+                if(cbxApp.SelectedIndex>=0)
+                {
+                    app = (IntPtr) cbxApp.SelectedValue;
+                }
+                var result = OKAction(type,format,monitor, app);
                 if(result)
                 {
                     this.Dispose();

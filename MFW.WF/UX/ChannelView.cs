@@ -94,25 +94,38 @@ namespace MFW.WF.UX
         {
             try
             {
-                if (_channel.IsLocal)
+                switch (_channel.ChannelType)
                 {
-                    var isOK = LAL.DetachStreamFromWindow(MediaTypeEnum.PLCM_MF_STREAM_LOCAL, _channel.ChannelID, _channel.Call.CallHandle);
-                    if (!isOK)
-                    {
-                        MessageBox.Show("本地视频卸载失败");
-                    }
-
-                }
-                else
-                {
-                    var isOK = LAL.DetachStreamFromWindow(MediaTypeEnum.PLCM_MF_STREAM_REMOTE, _channel.ChannelID, _channel.Call.CallHandle);
-                    if (!isOK)
-                    {
-                        MessageBox.Show("远程视频卸载失败");
-                    }
+                    case ChannelType.Local:
+                        {
+                            var isOK = LAL.DetachStreamFromWindow(MediaTypeEnum.PLCM_MF_STREAM_LOCAL, _channel.ChannelID, _channel.Call.CallHandle);
+                            if (!isOK)
+                            {
+                                MessageBox.Show("本地视频卸载失败");
+                            }
+                        }
+                        break;
+                    case ChannelType.Remote:
+                        {
+                            var isOK = LAL.DetachStreamFromWindow(MediaTypeEnum.PLCM_MF_STREAM_REMOTE, _channel.ChannelID, _channel.Call.CallHandle);
+                            if (!isOK)
+                            {
+                                MessageBox.Show("远程视频卸载失败");
+                            }
+                        }
+                        break;
+                    case ChannelType.Content:
+                        {
+                            var isOK = LAL.DetachStreamFromWindow(MediaTypeEnum.PLCM_MF_STREAM_CONTENT, _channel.ChannelID, _channel.Call.CallHandle);
+                            if (!isOK)
+                            {
+                                MessageBox.Show("共享视频卸载失败");
+                            }
+                        }
+                        break;
                 }
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
 
             }
@@ -173,41 +186,67 @@ namespace MFW.WF.UX
                 var hwnd = pnlVideo.Handle;
                 if (_channel.IsVideo)
                 {
-                    if (_channel.IsLocal)
+                    switch(_channel.ChannelType)
                     {
-                        var isOK = LAL.AttachStreamToWindow(hwnd, _channel.Call.CallHandle, MediaTypeEnum.PLCM_MF_STREAM_LOCAL, _channel.ChannelID, this.pnlVideo.Width, this.pnlVideo.Height - 40);
-                        if (!isOK)
-                        {
-                            MessageBox.Show("本地视频附加失败");
-                        }
-                    }
-                    else
-                    {
-                        var isOK = LAL.AttachStreamToWindow(hwnd, _channel.Call.CallHandle, MediaTypeEnum.PLCM_MF_STREAM_REMOTE, _channel.ChannelID, this.pnlVideo.Width, this.pnlVideo.Height - 40);
-                        if (!isOK)
-                        {
-                            MessageBox.Show("远程视频附加失败");
-                        }
+                        case ChannelType.Local:
+                            {
+                                var isOK = LAL.AttachStreamToWindow(hwnd, _channel.Call.CallHandle, MediaTypeEnum.PLCM_MF_STREAM_LOCAL, _channel.ChannelID, this.pnlVideo.Width, this.pnlVideo.Height - 40);
+                                if (!isOK)
+                                {
+                                    MessageBox.Show("本地视频附加失败");
+                                }
+                            }break;
+                        case ChannelType.Remote:
+                            {
+                                var isOK = LAL.AttachStreamToWindow(hwnd, _channel.Call.CallHandle, MediaTypeEnum.PLCM_MF_STREAM_REMOTE, _channel.ChannelID, this.pnlVideo.Width, this.pnlVideo.Height - 40);
+                                if (!isOK)
+                                {
+                                    MessageBox.Show("远程视频附加失败");
+                                }
+                            }
+                            break;
+                        case ChannelType.Content:
+                            {
+                                var isOK = LAL.AttachStreamToWindow(hwnd, _channel.Call.CallHandle, MediaTypeEnum.PLCM_MF_STREAM_CONTENT, _channel.ChannelID, this.pnlVideo.Width, this.pnlVideo.Height - 40);
+                                if (!isOK)
+                                {
+                                    MessageBox.Show("共享视频附加失败");
+                                }
+                            }
+                            break;
+
                     }
                 }
                 else  //音频
                 {
-                    if (_channel.IsLocal)
+                    switch(_channel.ChannelType)
                     {
-                        var isOK = LAL.DetachStreamFromWindow(MediaTypeEnum.PLCM_MF_STREAM_LOCAL, _channel.ChannelID, _channel.Call.CallHandle);
-                        if (!isOK)
-                        {
-                            MessageBox.Show("本地视频卸载失败");
-                        }
-
-                    }
-                    else
-                    {
-                        var isOK = LAL.DetachStreamFromWindow(MediaTypeEnum.PLCM_MF_STREAM_REMOTE, _channel.ChannelID, _channel.Call.CallHandle);
-                        if (!isOK)
-                        {
-                            MessageBox.Show("远程视频卸载失败");
-                        }
+                        case ChannelType.Local:
+                            {
+                                var isOK = LAL.DetachStreamFromWindow(MediaTypeEnum.PLCM_MF_STREAM_LOCAL, _channel.ChannelID, _channel.Call.CallHandle);
+                                if (!isOK)
+                                {
+                                    MessageBox.Show("本地视频卸载失败");
+                                }
+                            }
+                            break;
+                        case ChannelType.Remote:
+                            {
+                                var isOK = LAL.DetachStreamFromWindow(MediaTypeEnum.PLCM_MF_STREAM_REMOTE, _channel.ChannelID, _channel.Call.CallHandle);
+                                if (!isOK)
+                                {
+                                    MessageBox.Show("远程视频卸载失败");
+                                }
+                            }break;
+                        case ChannelType.Content:
+                            {
+                                var isOK = LAL.DetachStreamFromWindow(MediaTypeEnum.PLCM_MF_STREAM_CONTENT, _channel.ChannelID, _channel.Call.CallHandle);
+                                if (!isOK)
+                                {
+                                    MessageBox.Show("共享视频卸载失败");
+                                }
+                            }
+                            break;
                     }
                 }
             }

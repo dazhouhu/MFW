@@ -54,7 +54,6 @@
             this.btnCancel.Text = "取消  ";
             this.btnCancel.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             this.btnCancel.UseVisualStyleBackColor = false;
-            this.btnCancel.Visible = false;
             this.btnCancel.Click += new System.EventHandler(this.btnCancel_Click);
             // 
             // btnOK
@@ -72,7 +71,6 @@
             this.btnOK.Text = "确定  ";
             this.btnOK.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             this.btnOK.UseVisualStyleBackColor = false;
-            this.btnOK.Visible = false;
             this.btnOK.Click += new System.EventHandler(this.btnOK_Click);
             // 
             // rdoBFCP
@@ -136,7 +134,7 @@
             this.cbxApp.Name = "cbxApp";
             this.cbxApp.Size = new System.Drawing.Size(163, 20);
             this.cbxApp.TabIndex = 9;
-            this.cbxApp.ValueMember = "DeviceHandle";
+            this.cbxApp.ValueMember = "AppDeviceHandle";
             // 
             // label1
             // 
@@ -160,9 +158,9 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.Controls.Add(this.cbxApp);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.label1);
-            this.Controls.Add(this.cbxApp);
             this.Controls.Add(this.cbxMonitor);
             this.Controls.Add(this.cbxFormat);
             this.Controls.Add(this.rdMonitor);

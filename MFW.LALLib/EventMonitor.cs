@@ -374,11 +374,14 @@ namespace MFW.LALLib
                 case EventTypeEnum.SIP_CONTENT_INCOMING:
                     evt.Call.ContentWidth = evt.WndWidth;
                     evt.Call.ContentHeight = evt.WndHeight;
+                    evt.Call.AddChannel(evt.StreamId, ChannelType.Content);
+                    evt.Call.SetChannelSize(evt.StreamId, evt.WndWidth, evt.WndHeight);
                     evt.Call.CallEventState = CallEventStateEnum.INCOMING_CONTENT;
                     break;
                 case EventTypeEnum.SIP_CONTENT_CLOSED:
                     //log.Info("[SIP_CONTENT_CLOSED] sipCallId is" + evt.SipCallId);
                     log.Info("stop share content of Call handle: " + evt.CallHandle);
+
                     evt.Call.CallEventState = CallEventStateEnum.CONTENT_CLOSED;
                     break;
                 case EventTypeEnum.SIP_CONTENT_SENDING:
@@ -446,7 +449,7 @@ namespace MFW.LALLib
                 case EventTypeEnum.REMOTE_VIDEO_CHANNELSTATUS_CHANGED:
                     {
                         log.Info("[LAL event] SVC_CHANNEL_STATUS_UPDATE" + " StreamId=" + evt.StreamId + " callHandle=" + evt.CallHandle);
-                        evt.Call.AddChannel(evt.StreamId);
+                        evt.Call.AddChannel(evt.StreamId,ChannelType.Remote);
                         if(evt.IsActiveSpeaker){
                             evt.Call.ActiveSpeakerId=evt.StreamId;
                         }
